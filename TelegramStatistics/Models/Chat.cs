@@ -12,5 +12,7 @@ namespace TelegramStatistics.Models
 
         [JsonPropertyName("messages")]
         public List<Message>? Messages { get; set; } = new List<Message>();
+
+        public List<User>? Users { get; set; } = new List<User>();
     }
 }

@@ -40,7 +40,7 @@ namespace TelegramStatistics
 
                 // Words usage stats
 
-                writer.WriteLine($"{result.Count} records below:\n");
+                writer.WriteLine($"{result.Count()} records below:\n");
                 writer.WriteLine("| {0,-30} | {1,-8} |", "WORD", "COUNT");
                 writer.WriteLine(new string('-', delimiterLength));
 

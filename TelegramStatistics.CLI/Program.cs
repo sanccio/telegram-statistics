@@ -9,7 +9,7 @@ string path = @"C:\Users\sanch\source\repos\TelegramStatistics\TelegramStatistic
 IFileParser fileParser = new FileParser();
 Chat chat = await fileParser.DeserializeFile(path);
 ChatAnalyzer _ = new(fileParser);
-IEnumerable<string> messageTexts = fileParser.ExtractAllPlainTextsFromMessages(chat);
+
 fileParser.GroupAllMessagesBySender(chat);
 ConsoleOutput.PrintChatInfo(chat);
 
@@ -18,15 +18,14 @@ Dictionary<string, int> userStats = ChatAnalyzer.GetMessageCountOfEverySender(ch
 ConsoleOutput.PrintUserMessagesNumber(userStats);
 
 
-IEnumerable<string> words = fileParser.SplitTextsIntoWords(messageTexts);
 const int minimumWordFrequency = 1;
-IEnumerable<WordCount> wordsWithNumber = ChatAnalyzer.CountWordUsage(words, minimumWordFrequency);
-Console.WriteLine($"{wordsWithNumber.Count()} records below:\n");
-ConsoleOutput.PrintTable(wordsWithNumber/*.Take(10).ToList()*/); // Remove .Take()
+IEnumerable<WordCount> wordCounts = ChatAnalyzer.GetWordsUsage(chat, minimumWordFrequency);
+
+Console.WriteLine($"{wordCounts.Count()} records below:\n");
+ConsoleOutput.PrintTable(wordCounts/*.Take(10).ToList()*/); // Remove .Take()
 
 
-
-TXTFileWriter fileWriter = new();
-fileWriter.WriteFile(chat, wordsWithNumber, userStats);
+//TXTFileWriter fileWriter = new();
+//fileWriter.WriteFile(chat, wordCounts, userStats);
 
 Console.Read();

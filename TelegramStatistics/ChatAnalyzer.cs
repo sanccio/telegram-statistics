@@ -22,23 +22,26 @@ namespace TelegramStatistics
 
 
 
-        public static Dictionary<string, int> GetMessageCountOfEverySender(Chat? chat)
+        public static IEnumerable<WordCount> GetWordsUsage(Chat chat, int? minimumWordFrequency)
         {
-            Dictionary<string, int> userMessageCounts = new();
+            minimumWordFrequency ??= 1;
 
-            var users = _fileParser?.GroupAllMessagesBySender(chat);
+            List<string> plainTexts = new();
+            List<string> words = new();
+            List<WordCount> wordCounts = new();
 
-            foreach (var user in users!)
-            {
-                userMessageCounts.Add(user.From!, user!.Messages!.Count);
-            }
+            plainTexts.AddRange(_fileParser!.ExtractAllPlainTextsFromMessages(chat));
 
-            return userMessageCounts;
+            words.AddRange(_fileParser.SplitTextsIntoWords(plainTexts));
+
+            wordCounts.AddRange(CountWordUsage(words, minimumWordFrequency));
+
+            return wordCounts;
         }
 
 
 
-        public static IEnumerable<WordCount> CountWordUsage(IEnumerable<string> words, int minimumWordFrequency)
+        private static IEnumerable<WordCount> CountWordUsage(IEnumerable<string> words, int? minimumWordFrequency)
         {
             int minWordLength = 3;
 
@@ -75,6 +78,28 @@ namespace TelegramStatistics
 
         }
 
+
+
+        public static Dictionary<string, int> GetMessageCountOfEverySender(Chat? chat)
+        {
+            Dictionary<string, int> userMessageCounts = new();
+
+            var users = _fileParser?.GroupAllMessagesBySender(chat);
+
+            foreach (var user in users!)
+            {
+                userMessageCounts.Add(user.From!, user!.Messages!.Count);
+            }
+
+            return userMessageCounts;
+        }
+
+
+
+        public static IEnumerable<User>? GetUserMessages(Chat? chat)
+        {
+            return chat?.Users;
+        }
 
     }
 }

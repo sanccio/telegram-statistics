@@ -64,6 +64,8 @@ namespace TelegramStatistics
                 users.Add(new User { From = name, Messages = senderMessages.ToList() });
             }
 
+            chat.Users = users;
+
             return users;
         }
 
