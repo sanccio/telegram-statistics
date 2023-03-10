@@ -15,43 +15,51 @@ namespace TelegramStatistics
 
             using (StreamWriter writer = new(filePath, false, Encoding.UTF8))
             {
-                // General chat info
+                WriteGeneralChatInfo(chat, delimiterLength, writer);
 
-                writer.WriteLine(new string('-', delimiterLength));
-                writer.WriteLine("GENERAL INFORMATION ABOUT THE CHAT");
-                writer.WriteLine(new string('-', delimiterLength));
-                writer.WriteLine($"Chat type             : {chat?.Type?.Replace('_', ' ').ToLower()}");
+                WriteUsersMessagesStats(numberOfMessagesByUsers, delimiterLength, writer);
 
-                writer.WriteLine($"Total message count   : {chat?.Messages?.Count}");
-                writer.WriteLine(new string('-', delimiterLength));
-                writer.WriteLine("\n\n\n");
+                WriteGeneralWordsUsageStats(result, delimiterLength, writer);
 
-                // User messages stats
-
-                writer.WriteLine("| {0, -19} | {1, -19} |", "FROM", "MESSAGE COUNT");
-                writer.WriteLine(new string('-', delimiterLength));
-
-                foreach (var userStats in numberOfMessagesByUsers)
-                {
-                    writer.WriteLine("| {0, -19} | {1,-19} |", userStats.Key, userStats.Value);
-                    writer.WriteLine(new string('-', delimiterLength));
-                }
-                writer.WriteLine("\n\n\n");
-
-                // Words usage stats
-
-                writer.WriteLine($"{result.Count()} records below:\n");
-                writer.WriteLine("| {0,-30} | {1,-8} |", "WORD", "COUNT");
-                writer.WriteLine(new string('-', delimiterLength));
-
-                foreach (var word in result)
-                {
-                    writer.WriteLine("| {0,-30} | {1,-8} |", word.Text, word.Number);
-                    writer.WriteLine(new string('-', delimiterLength));
-                }
             }
-
         }
 
+        private static void WriteGeneralWordsUsageStats(IEnumerable<WordCount> result, int delimiterLength, StreamWriter writer)
+        {
+            writer.WriteLine($"General words usage stats - {result.Count()} records below:\n");
+            writer.WriteLine("| {0,-30} | {1,-8} |", "WORD", "COUNT");
+            writer.WriteLine(new string('-', delimiterLength));
+
+            foreach (var word in result)
+            {
+                writer.WriteLine("| {0,-30} | {1,-8} |", word.Text, word.Number);
+                writer.WriteLine(new string('-', delimiterLength));
+            }
+        }
+
+        private static void WriteUsersMessagesStats(Dictionary<string, int> numberOfMessagesByUsers, int delimiterLength, StreamWriter writer)
+        {
+            writer.WriteLine("| {0, -19} | {1, -19} |", "FROM", "MESSAGE COUNT");
+            writer.WriteLine(new string('-', delimiterLength));
+
+            foreach (var userStats in numberOfMessagesByUsers)
+            {
+                writer.WriteLine("| {0, -19} | {1,-19} |", userStats.Key, userStats.Value);
+                writer.WriteLine(new string('-', delimiterLength));
+            }
+            writer.WriteLine("\n\n\n");
+        }
+
+        private static void WriteGeneralChatInfo(Chat? chat, int delimiterLength, StreamWriter writer)
+        {
+            writer.WriteLine(new string('-', delimiterLength));
+            writer.WriteLine("GENERAL INFORMATION ABOUT THE CHAT");
+            writer.WriteLine(new string('-', delimiterLength));
+            writer.WriteLine($"Chat type             : {chat?.Type?.Replace('_', ' ').ToLower()}");
+
+            writer.WriteLine($"Total message count   : {chat?.Messages?.Count}");
+            writer.WriteLine(new string('-', delimiterLength));
+            writer.WriteLine("\n\n\n");
+        }
     }
 }
