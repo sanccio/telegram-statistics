@@ -19,10 +19,16 @@ ConsoleOutput.PrintUserMessagesNumber(userStats);
 
 
 const int minimumWordFrequency = 1;
-IEnumerable<WordCount> wordCounts = ChatAnalyzer.GetWordsUsage(chat, minimumWordFrequency);
+IEnumerable<WordCount> wordCounts = ChatAnalyzer.GetWordsUsage(chat.Messages!, minimumWordFrequency);
 
 Console.WriteLine($"{wordCounts.Count()} records below:\n");
 ConsoleOutput.PrintTable(wordCounts/*.Take(10).ToList()*/); // Remove .Take()
+
+
+
+IEnumerable<UserWordCount> usersWordsCounts = ChatAnalyzer.GetWordsUsagePerUser(chat, minimumWordFrequency);
+ConsoleOutput.PrintTable(usersWordsCounts);
+
 
 
 //TXTFileWriter fileWriter = new();

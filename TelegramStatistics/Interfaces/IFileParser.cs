@@ -11,11 +11,13 @@ namespace TelegramStatistics.Interfaces
     {
         public Task<Chat> DeserializeFile(string path);
 
-        public IEnumerable<string> ExtractAllPlainTextsFromMessages(Chat? chat);
+        public IEnumerable<string> GetPlainTexts(IEnumerable<Message> messages);
+
+        public Dictionary<string, List<Message>?> GetUsersMessages(Chat chat);
 
         public IEnumerable<User> GroupAllMessagesBySender(Chat? chat);
 
-        public IEnumerable<string> SplitTextsIntoWords(IEnumerable<string> texts);
+        public IEnumerable<string> SplitTextsIntoWords(IEnumerable<string> plainTexts);
 
         public string ClearTextFromEmoji(string text);
     }

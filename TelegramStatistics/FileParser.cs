@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
@@ -19,14 +20,14 @@ namespace TelegramStatistics
 
 
 
-        public IEnumerable<string> ExtractAllPlainTextsFromMessages(Chat? chat)
+        public IEnumerable<string> GetPlainTexts(IEnumerable<Message> messages)
         {
             List<string> plainTexts = new();
 
-            if (chat is null)
+            if (messages is null)
                 return plainTexts;
 
-            foreach (var message in chat!.Messages!)
+            foreach (var message in messages)
             {
                 if (message.ForwardedFrom is not null)
                     continue;
@@ -39,6 +40,17 @@ namespace TelegramStatistics
             }
 
             return plainTexts;
+        }
+
+
+
+        public Dictionary<string, List<Message>?> GetUsersMessages(Chat chat)
+        {
+            Dictionary<string, List<Message>?> usersMessages = chat.Users!
+                 .Select(x => new { x.From, x.Messages })
+                 .ToDictionary(x => x.From, x => x.Messages);
+
+            return usersMessages;
         }
 
 

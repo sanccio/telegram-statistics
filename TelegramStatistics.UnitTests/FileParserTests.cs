@@ -47,7 +47,7 @@ namespace TelegramStatistics.UnitTests
             var chat = JsonDeserializer
                 .GetData(@"jsonTestFiles\test_data_1.json");
 
-            var actualPlainTexts = _fileParser.ExtractAllPlainTextsFromMessages(chat);
+            var actualPlainTexts = _fileParser.GetPlainTexts(chat.Messages!);
 
             expectedPlainTexts.AddRange(
                 new string[]{
@@ -68,7 +68,7 @@ namespace TelegramStatistics.UnitTests
             var chat = JsonDeserializer
                 .GetData(@"jsonTestFiles\test_data_2.json");
 
-            var actualPlainTexts = _fileParser.ExtractAllPlainTextsFromMessages(chat);
+            var actualPlainTexts = _fileParser.GetPlainTexts(chat.Messages!);
 
             expectedPlainTexts.AddRange(
                 new string[]{

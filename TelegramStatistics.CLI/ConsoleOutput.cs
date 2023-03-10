@@ -37,10 +37,10 @@ namespace TelegramStatistics
 
         public static void PrintTable(IEnumerable<WordCount> wordsWithNumber)
         {
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            //Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("| {0,-30} | {1,-8} |", "WORD", "COUNT");
 
-            Console.ResetColor();
+            //Console.ResetColor();
 
             Console.WriteLine(new string('-', delimiterLength));
 
@@ -51,6 +51,34 @@ namespace TelegramStatistics
             }
 
         }
+
+        public static void PrintTable(IEnumerable<UserWordCount> usersWordCounts)
+        {
+            const int delimiterLength = 45;
+
+            foreach (var userWordCount in usersWordCounts)
+            {
+                // Print table footer
+                Console.WriteLine("\n\n\n");
+                Console.WriteLine($"Stats for user: {userWordCount.UserName}\n");
+
+                // Print table header
+                Console.WriteLine($"\n|{" WORD",-31} |{" COUNT",-9} |");
+                Console.WriteLine(new string('-', delimiterLength));
+
+                // Print table rows
+                foreach (var wordCount in userWordCount.UserWordCounts)
+                {
+                    Console.WriteLine($"| {wordCount.Text,-30} | {wordCount.Number,-8} |");
+                    Console.WriteLine(new string('-', delimiterLength));
+                }
+
+            }
+        }
+
+
+
+
 
     }
 }

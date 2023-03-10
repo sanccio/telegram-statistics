@@ -1,4 +1,5 @@
-﻿using TelegramStatistics.Interfaces;
+﻿using System.Collections.Generic;
+using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
 namespace TelegramStatistics
@@ -22,7 +23,7 @@ namespace TelegramStatistics
 
 
 
-        public static IEnumerable<WordCount> GetWordsUsage(Chat chat, int? minimumWordFrequency)
+        public static IEnumerable<WordCount> GetWordsUsage(IEnumerable<Message> messages, int? minimumWordFrequency)
         {
             minimumWordFrequency ??= 1;
 
@@ -30,7 +31,7 @@ namespace TelegramStatistics
             List<string> words = new();
             List<WordCount> wordCounts = new();
 
-            plainTexts.AddRange(_fileParser!.ExtractAllPlainTextsFromMessages(chat));
+            plainTexts.AddRange(_fileParser!.GetPlainTexts(messages));
 
             words.AddRange(_fileParser.SplitTextsIntoWords(plainTexts));
 
@@ -41,7 +42,29 @@ namespace TelegramStatistics
 
 
 
-        private static IEnumerable<WordCount> CountWordUsage(IEnumerable<string> words, int? minimumWordFrequency)
+        public static List<UserWordCount> GetWordsUsagePerUser(Chat chat, int minimumWordFrequency)
+        {
+            List<UserWordCount> userWordsStats = new();
+
+            Dictionary<string, List<Message>?> usersMessages = _fileParser!.GetUsersMessages(chat);
+
+            foreach (var userMessages in usersMessages)
+            {
+                UserWordCount wordCounts = new(); 
+
+                wordCounts.UserWordCounts.AddRange(GetWordsUsage(userMessages.Value!, minimumWordFrequency));
+
+                wordCounts.UserName = userMessages.Key;
+
+                userWordsStats.Add(wordCounts);
+            }
+
+            return userWordsStats;
+        }
+
+
+
+        public static IEnumerable<WordCount> CountWordUsage(IEnumerable<string> words, int? minimumWordFrequency)
         {
             int minWordLength = 3;
 
