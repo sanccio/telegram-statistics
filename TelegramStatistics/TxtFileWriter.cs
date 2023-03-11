@@ -6,8 +6,7 @@ namespace TelegramStatistics
 {
     public class TXTFileWriter : IFileWriter
     {
-
-        public void WriteFile(Chat? chat, IEnumerable<WordCount> result, Dictionary<string, int> numberOfMessagesByUsers)
+        public void WriteFile(Chat? chat, IEnumerable<WordCount> generalWordsUsage, IEnumerable<UserWordCount> usersWordCounts, Dictionary<string, int> numberOfMessagesByUsers)
         {
             string dateTime = DateTime.Now.ToString("dd-MM-HH-mm");
             string filePath = $@"C:\Users\sanch\Desktop\Telegram-stats-{dateTime}.txt";
@@ -19,7 +18,27 @@ namespace TelegramStatistics
 
                 WriteUsersMessagesStats(numberOfMessagesByUsers, delimiterLength, writer);
 
-                WriteGeneralWordsUsageStats(result, delimiterLength, writer);
+                WriteGeneralWordsUsageStats(generalWordsUsage, delimiterLength, writer);
+
+                WriteWordsUsageStatsForEachUser(usersWordCounts, delimiterLength, writer);
+            }
+        }
+
+        private static void WriteWordsUsageStatsForEachUser(IEnumerable<UserWordCount> result, int delimiterLength, StreamWriter writer)
+        {
+            foreach (var userWordCount in result)
+            {
+                writer.WriteLine("\n\n\n");
+                writer.WriteLine($"Stats for {userWordCount.UserName} - {userWordCount.UserWordCounts.Count} records below:\n");
+
+                writer.WriteLine($"|{" WORD",-31} |{" COUNT",-9} |");
+                writer.WriteLine(new string('-', delimiterLength));
+
+                foreach (var wordCount in userWordCount.UserWordCounts)
+                {
+                    writer.WriteLine($"| {wordCount.Text,-30} | {wordCount.Number,-8} |");
+                    writer.WriteLine(new string('-', delimiterLength));
+                }
 
             }
         }
