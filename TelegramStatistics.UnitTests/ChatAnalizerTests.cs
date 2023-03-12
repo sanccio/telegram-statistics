@@ -5,23 +5,25 @@ namespace TelegramStatistics.UnitTests
 {
     internal class ChatAnalizerTests
     {
-        private static IFileParser _fileParser;
-        private static ChatAnalyzer _chatAnalyzer;
-
-        public Chat _chat;
+        private static IChatService _chatService;
+        private static ITextAnalyzer _textAnalyzer;
+        private static ChatStatistics _chatStatistics;
+        private Chat _chat;
 
         [SetUp]
         public void Setup()
         {
-            _fileParser = new FileParser();
-            _chatAnalyzer = new ChatAnalyzer(_fileParser);
+            _chatService = new ChatService();
+            _textAnalyzer = new TextAnalyzer();
+            _chatStatistics = new ChatStatistics(_chatService, _textAnalyzer!);
             _chat = JsonDeserializer.GetData(@"jsonTestFiles\test_data_2.json");
         }
 
         [Test]
         public void GetMessageCountOfEverySender_ReturnsUserMessagesCount_True()
         {
-            var actualUsersMessageCounts = ChatAnalyzer.GetMessageCountOfEverySender(_chat);
+            _chatService.GroupAllMessagesBySender(_chat);
+            var actualUsersMessageCounts = ChatStatistics.GetMessageCountOfEverySender(_chat);
 
             Dictionary<string, int> expectedUserMessageCounts = new()
             {
@@ -38,7 +40,7 @@ namespace TelegramStatistics.UnitTests
         {
             List<string> words = new() { "Весна", "Лето", "Весна", "Весна", "Зима", "Зима" };
 
-            var actualWordUsage = ChatAnalyzer.CountWordUsage(words, 1);
+            var actualWordUsage = _textAnalyzer!.CountWordUsage(words, 1);
 
             List<WordCount> expectedWordUsage = new()
             {

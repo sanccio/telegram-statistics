@@ -6,25 +6,28 @@ using TelegramStatistics.Models;
 string path = @"C:\Users\sanch\source\repos\TelegramStatistics\TelegramStatistics.UnitTests\jsonTestFiles\test_data_2.json";
 
 
-IFileParser fileParser = new FileParser();
-Chat chat = await fileParser.DeserializeFile(path);
-ChatAnalyzer _ = new(fileParser);
+IChatService chatService = new ChatService();
+ITextAnalyzer textAnalyzer = new TextAnalyzer();
+IDeserializer deserializer = new JsonDeserializer();
+IChatStatistics chatStatistics = new ChatStatistics(chatService, textAnalyzer);
 
-fileParser.GroupAllMessagesBySender(chat);
+Chat chat = await deserializer.DeserializeFile(path);
+
+chatService.GroupAllMessagesBySender(chat);
 ConsoleOutput.PrintChatInfo(chat);
 
 
-Dictionary<string, int> userStats = ChatAnalyzer.GetMessageCountOfEverySender(chat);
-ConsoleOutput.PrintUserMessagesNumber(userStats);
+Dictionary<string, int> userMessageCounts = chatStatistics.GetMessageCountOfEverySender(chat);
+ConsoleOutput.PrintUserMessagesNumber(userMessageCounts);
 
 
 const int minimumWordFrequency = 1;
-IEnumerable<WordCount> wordCounts = ChatAnalyzer.GetWordsUsage(chat.Messages!, minimumWordFrequency);
+IEnumerable<WordCount> wordCounts = chatStatistics.GetWordsUsage(chat.Messages!, minimumWordFrequency);
 ConsoleOutput.PrintTable(wordCounts/*.Take(10).ToList()*/); // Remove .Take()
 
 
-IEnumerable<UserWordCount> usersWordsCounts = ChatAnalyzer.GetWordsUsagePerUser(chat, minimumWordFrequency);
-ConsoleOutput.PrintTable(usersWordsCounts);
+IEnumerable<UserWordCount> userWordCounts = chatStatistics.GetWordsUsagePerUser(chat, minimumWordFrequency);
+ConsoleOutput.PrintTable(userWordCounts);
 
 
 //TXTFileWriter fileWriter = new();

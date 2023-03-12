@@ -5,12 +5,14 @@ namespace TelegramStatistics.UnitTests
 {
     public class FileParserTests
     {
-        private IFileParser _fileParser;
+        private IChatService _chatService;
+        private Interfaces.ITextAnalyzer _wordService;
 
         [SetUp]
         public void Setup()
         {
-            _fileParser = new FileParser();
+            _chatService = new ChatService();
+            _wordService = new TextAnalyzer();
         }
 
         [Test]
@@ -24,7 +26,7 @@ namespace TelegramStatistics.UnitTests
                 "1234567890 !@#$%^&*()_-+={}[]|:;\"\"'<>,.?/"
                 });
 
-            var actual = _fileParser.SplitTextsIntoWords(texts);
+            var actual = _wordService.SplitTextsIntoWords(texts);
 
             List<string> expected = new();
             expected.AddRange(
@@ -47,7 +49,7 @@ namespace TelegramStatistics.UnitTests
             var chat = JsonDeserializer
                 .GetData(@"jsonTestFiles\test_data_1.json");
 
-            var actualPlainTexts = _fileParser.GetPlainTexts(chat.Messages!);
+            var actualPlainTexts = _chatService.GetPlainTexts(chat.Messages!);
 
             expectedPlainTexts.AddRange(
                 new string[]{
@@ -68,7 +70,7 @@ namespace TelegramStatistics.UnitTests
             var chat = JsonDeserializer
                 .GetData(@"jsonTestFiles\test_data_2.json");
 
-            var actualPlainTexts = _fileParser.GetPlainTexts(chat.Messages!);
+            var actualPlainTexts = _chatService.GetPlainTexts(chat.Messages!);
 
             expectedPlainTexts.AddRange(
                 new string[]{
@@ -103,15 +105,15 @@ namespace TelegramStatistics.UnitTests
             var chat = JsonDeserializer
                 .GetData(@"jsonTestFiles\test_data_2.json");
 
-            var users = _fileParser.GroupAllMessagesBySender(chat);
+            _chatService.GroupAllMessagesBySender(chat);
 
-            var actualUserCount = users.Count();
+            var actualUserCount = chat!.Users!.Count();
             var expectedUserCount = 2;
 
-            int actualUser1MessageCount = users.Select(u => u!.Messages!.Select(m => m.From).Where(f => f == "Name_1")).Count();
+            int actualUser1MessageCount = chat!.Users!.Select(u => u!.Messages!.Select(m => m.From).Where(f => f == "Name_1")).Count();
             var expectedUser1MessageCount = 2;
 
-            var actualUser2MessageCount = users.Select(u => u!.Messages!.Select(m => m.From).Where(f => f == "Name_2")).Count();
+            var actualUser2MessageCount = chat!.Users!.Select(u => u!.Messages!.Select(m => m.From).Where(f => f == "Name_2")).Count();
             var expectedUser2MessageCount = 2;
             
             Assert.Multiple(() =>
