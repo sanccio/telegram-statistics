@@ -3,46 +3,20 @@ using TelegramStatistics.Interfaces;
 
 namespace TelegramStatistics.UnitTests
 {
-    public class FileParserTests
+    internal class ChatServiceTests
     {
         private IChatService _chatService;
-        private Interfaces.ITextAnalyzer _wordService;
+        private ITextAnalyzer _textAnalyzer;
 
         [SetUp]
         public void Setup()
         {
             _chatService = new ChatService();
-            _wordService = new TextAnalyzer();
+            _textAnalyzer = new TextAnalyzer();
         }
 
         [Test]
-        public void SplitTextsIntoWords_ReturnsSeparateWords_True()
-        {
-            List<string> texts = new();
-            texts.AddRange(
-            new string[] {
-                "Hey! It's me, random text. I'm here to help you test your regex pattern. " +
-                "I can't wait to see how well it performs! Are you ready? Let's go! " +
-                "1234567890 !@#$%^&*()_-+={}[]|:;\"\"'<>,.?/"
-                });
-
-            var actual = _wordService.SplitTextsIntoWords(texts);
-
-            List<string> expected = new();
-            expected.AddRange(
-                new string[] {
-                    "hey","it's","me","random","text","i'm","here",
-                    "to","help","you","test","your","regex","pattern",
-                    "i","can't","wait","to","see","how","well","it",
-                    "performs","are","you","ready","let's","go", "1234567890"
-                });
-
-
-            Assert.That(actual, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void ExtractAllPlainTextsFromMessages_ReturnsPlainTypeTexts_True()
+        public void GetPlainTexts_ReturnsPlainTypeTexts_True()
         {
             List<string> expectedPlainTexts = new();
 
@@ -63,7 +37,7 @@ namespace TelegramStatistics.UnitTests
         }
 
         [Test]
-        public void ExtractAllPlainTextsFromMessages_ReturnsOnlyPlainTypeTexts_True()
+        public void GetPlainTexts_ReturnsOnlyPlainTypeTexts_True()
         {
             List<string> expectedPlainTexts = new();
 
@@ -86,7 +60,7 @@ namespace TelegramStatistics.UnitTests
         }
 
         [Test]
-        public void DeserializeFile_ReturnsTotalMessageCount_True()
+        public void CheckChatMessageCount_ReturnsTotalMessageCount_True()
         {
             var chat = JsonDeserializer
                 .GetData(@"jsonTestFiles\test_data_2.json");
@@ -122,7 +96,7 @@ namespace TelegramStatistics.UnitTests
                 Assert.That(actualUser1MessageCount, Is.EqualTo(expectedUser1MessageCount));
                 Assert.That(actualUser2MessageCount, Is.EqualTo(expectedUser2MessageCount));
             });
-
         }
+
     }
 }
