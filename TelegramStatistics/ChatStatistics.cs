@@ -9,10 +9,10 @@ namespace TelegramStatistics
         private readonly IChatService _chatService;
         private readonly ITextAnalyzer _textAnalyzer;
 
-        public ChatStatistics(IChatService chatService, ITextAnalyzer wordService)
+        public ChatStatistics(IChatService chatService, ITextAnalyzer textAnalyzer)
         {
             _chatService = chatService;
-            _textAnalyzer = wordService;
+            _textAnalyzer = textAnalyzer;
         }
 
 
@@ -32,9 +32,9 @@ namespace TelegramStatistics
             List<string> words = new();
             List<WordCount> wordCounts = new();
 
-            plainTexts.AddRange(_chatService!.GetPlainTexts(messages));
+            plainTexts.AddRange(_chatService.GetPlainTexts(messages));
 
-            words.AddRange(_textAnalyzer!.SplitTextsIntoWords(plainTexts));
+            words.AddRange(_textAnalyzer.SplitTextsIntoWords(plainTexts));
 
             wordCounts.AddRange(_textAnalyzer.CountWordUsage(words, minimumWordFrequency));
 
