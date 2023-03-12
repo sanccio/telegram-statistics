@@ -3,7 +3,9 @@ using TelegramStatistics;
 using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
-string path = @"C:\Users\sanch\source\repos\TelegramStatistics\TelegramStatistics.UnitTests\jsonTestFiles\test_data_2.json";
+string fileReadingPath = @"C:\Users\sanch\source\repos\TelegramStatistics\TelegramStatistics.UnitTests\jsonTestFiles\test_data_2.json";
+
+string fileWritingPath = @"C:\Users\sanch\Desktop";
 
 
 IChatService chatService = new ChatService();
@@ -11,7 +13,7 @@ ITextAnalyzer textAnalyzer = new TextAnalyzer();
 IDeserializer deserializer = new JsonDeserializer();
 IChatStatistics chatStatistics = new ChatStatistics(chatService, textAnalyzer);
 
-Chat chat = await deserializer.DeserializeFile(path);
+Chat chat = await deserializer.DeserializeFile(fileReadingPath);
 
 chatService.GroupAllMessagesBySender(chat);
 ConsoleOutput.PrintChatInfo(chat);
@@ -30,7 +32,7 @@ IEnumerable<UserWordCount> userWordCounts = chatStatistics.GetWordsUsagePerUser(
 ConsoleOutput.PrintTable(userWordCounts);
 
 
-//TXTFileWriter fileWriter = new();
-//fileWriter.WriteFile(chat, wordCounts, usersWordsCounts, userStats);
+TXTFileWriter fileWriter = new();
+fileWriter.WriteFile(chat, fileWritingPath, wordCounts, userWordCounts, userMessageCounts);
 
 Console.Read();

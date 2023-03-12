@@ -6,13 +6,13 @@ namespace TelegramStatistics
 {
     public class TXTFileWriter : IFileWriter
     {
-        public void WriteFile(Chat? chat, IEnumerable<WordCount> generalWordsUsage, IEnumerable<UserWordCount> usersWordCounts, Dictionary<string, int> numberOfMessagesByUsers)
+        public void WriteFile(Chat chat, string filePath, IEnumerable<WordCount> generalWordsUsage, IEnumerable<UserWordCount> usersWordCounts, Dictionary<string, int> numberOfMessagesByUsers)
         {
             string dateTime = DateTime.Now.ToString("dd-MM-HH-mm");
-            string filePath = $@"C:\Users\sanch\Desktop\Telegram-stats-{dateTime}.txt";
+            string fileName = $@"\Telegram-stats-{dateTime}.txt";
             int delimiterLength = 45;
 
-            using (StreamWriter writer = new(filePath, false, Encoding.UTF8))
+            using (StreamWriter writer = new(filePath + fileName, false, Encoding.UTF8))
             {
                 WriteGeneralChatInfo(chat, delimiterLength, writer);
 
