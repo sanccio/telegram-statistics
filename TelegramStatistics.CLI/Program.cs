@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using System.Text;
 using TelegramStatistics;
 using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
@@ -6,6 +7,7 @@ using TelegramStatistics.Models;
 string telegramChatFilePath = string.Empty;
 string reportSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 
+Console.OutputEncoding = Encoding.UTF8;
 
 bool isInputPathValid = false;
 Console.WriteLine("Enter the file path. Example: C:\\Documents\\Telegram Desktop\\result.json\n");
