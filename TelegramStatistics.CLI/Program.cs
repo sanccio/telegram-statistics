@@ -8,14 +8,13 @@ string fileReadingPath = @"C:\Users\sanch\source\repos\TelegramStatistics\Telegr
 string fileWritingPath = @"C:\Users\sanch\Desktop";
 
 
-IChatService chatService = new ChatService();
-ITextAnalyzer textAnalyzer = new TextAnalyzer();
 IDeserializer deserializer = new JsonDeserializer();
+Chat chat = await deserializer.DeserializeFile(fileReadingPath);
+IChatService chatService = new ChatService(chat);
+ITextAnalyzer textAnalyzer = new TextAnalyzer();
 IChatStatistics chatStatistics = new ChatStatistics(chatService, textAnalyzer);
 
-Chat chat = await deserializer.DeserializeFile(fileReadingPath);
 
-chatService.GroupAllMessagesBySender(chat);
 ConsoleOutput.PrintChatInfo(chat);
 
 

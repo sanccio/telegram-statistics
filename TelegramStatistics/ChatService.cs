@@ -1,10 +1,21 @@
-﻿using TelegramStatistics.Interfaces;
+﻿using System;
+using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
 namespace TelegramStatistics
 {
     public class ChatService : IChatService
     {
+        
+        public ChatService(Chat chat)
+        {
+            GroupAllMessagesBySender(chat);
+        }
+
+        public ChatService()
+        {
+
+        }
 
         public IEnumerable<string> GetPlainTexts(IEnumerable<Message> messages)
         {
