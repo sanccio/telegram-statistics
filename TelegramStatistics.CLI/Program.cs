@@ -3,9 +3,31 @@ using TelegramStatistics;
 using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
-string fileReadingPath = @"C:\Users\sanch\source\repos\TelegramStatistics\TelegramStatistics.UnitTests\jsonTestFiles\test_data_2.json";
+string fileReadingPath = string.Empty;
+string fileWritingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 
-string fileWritingPath = @"C:\Users\sanch\Desktop";
+
+bool flag = false;
+Console.WriteLine("Please, enter the file path. Example: C:\\Documents\\Telegram Desktop\\result.json\n");
+
+while(!flag)
+{
+
+    fileReadingPath = Console.ReadLine()!;
+
+    if (File.Exists(fileReadingPath))
+    {
+        flag = true;
+        Console.WriteLine("\nGreat! Your file report will be on the desktop.\n");
+        Thread.Sleep(4000);
+    }
+    else
+    {
+        Console.WriteLine("\nOops... the file not found! Check the input and try again!\n");
+    }
+}
+
+Console.Clear();
 
 
 IDeserializer deserializer = new JsonDeserializer();
