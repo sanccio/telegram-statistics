@@ -8,13 +8,13 @@ string reportSavePath = Path.Combine(Environment.GetFolderPath(Environment.Speci
 
 
 bool isInputPathValid = false;
-Console.WriteLine("Please, enter the file path. Example: C:\\Documents\\Telegram Desktop\\result.json\n");
+Console.WriteLine("Enter the file path. Example: C:\\Documents\\Telegram Desktop\\result.json\n");
 
 while(!isInputPathValid)
 {
     telegramChatFilePath = Console.ReadLine()!;
 
-    if (File.Exists(telegramChatFilePath))
+    if (File.Exists(telegramChatFilePath) && Path.GetExtension(telegramChatFilePath).Equals(".json", StringComparison.OrdinalIgnoreCase))
     {
         isInputPathValid = true;
         Console.Write("\nGreat! Your file report will be on the desktop. Press any key to continue...");
@@ -22,7 +22,7 @@ while(!isInputPathValid)
     }
     else
     {
-        Console.WriteLine("\nOops... the file not found! Check the input and try again!\n");
+        Console.WriteLine("\nOops! The file path you entered either does not exist or does not point to a valid JSON file. Please check your input and try again.\n");
     }
 }
 
