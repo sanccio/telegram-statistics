@@ -3,23 +3,22 @@ using TelegramStatistics;
 using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
-string fileReadingPath = string.Empty;
-string fileWritingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+string telegramChatFilePath = string.Empty;
+string reportSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 
 
-bool flag = false;
+bool isInputPathValid = false;
 Console.WriteLine("Please, enter the file path. Example: C:\\Documents\\Telegram Desktop\\result.json\n");
 
-while(!flag)
+while(!isInputPathValid)
 {
+    telegramChatFilePath = Console.ReadLine()!;
 
-    fileReadingPath = Console.ReadLine()!;
-
-    if (File.Exists(fileReadingPath))
+    if (File.Exists(telegramChatFilePath))
     {
-        flag = true;
-        Console.WriteLine("\nGreat! Your file report will be on the desktop.\n");
-        Thread.Sleep(4000);
+        isInputPathValid = true;
+        Console.Write("\nGreat! Your file report will be on the desktop. Press any key to continue...");
+        Console.ReadKey();
     }
     else
     {
@@ -31,7 +30,7 @@ Console.Clear();
 
 
 IDeserializer deserializer = new JsonDeserializer();
-Chat chat = await deserializer.DeserializeFile(fileReadingPath);
+Chat chat = await deserializer.DeserializeFile(telegramChatFilePath);
 IChatService chatService = new ChatService(chat);
 ITextAnalyzer textAnalyzer = new TextAnalyzer();
 IChatStatistics chatStatistics = new ChatStatistics(chatService, textAnalyzer);
@@ -54,6 +53,6 @@ ConsoleOutput.PrintTable(userWordCounts);
 
 
 TXTFileWriter fileWriter = new();
-fileWriter.WriteFile(chat, fileWritingPath, wordCounts, userWordCounts, userMessageCounts);
+fileWriter.WriteFile(chat, reportSavePath, wordCounts, userWordCounts, userMessageCounts);
 
 Console.Read();
