@@ -5,8 +5,7 @@ using TelegramStatistics.Models;
 namespace TelegramStatistics
 {
     public class ChatService : IChatService
-    {
-        
+    {        
         public ChatService(Chat chat)
         {
             GroupAllMessagesBySender(chat);
@@ -14,8 +13,8 @@ namespace TelegramStatistics
 
         public ChatService()
         {
-
         }
+
 
         public IEnumerable<string> GetPlainTexts(IEnumerable<Message> messages)
         {
@@ -37,7 +36,6 @@ namespace TelegramStatistics
         }
 
 
-
         public Dictionary<string, List<Message>?> GetUsersMessages(List<User> users)
         {
             Dictionary<string, List<Message>?> usersMessages = users
@@ -45,7 +43,6 @@ namespace TelegramStatistics
 
             return usersMessages;
         }
-
 
         
         public void GroupAllMessagesBySender(Chat chat)
@@ -67,7 +64,6 @@ namespace TelegramStatistics
         }
 
 
-
         public IEnumerable<string?> GetSendersNames(List<Message> messages)
         {
             IEnumerable<string?> senderNames = new List<string>();
@@ -79,6 +75,5 @@ namespace TelegramStatistics
 
             return senderNames;
         }
-
     }
 }

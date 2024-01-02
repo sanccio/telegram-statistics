@@ -5,7 +5,6 @@ namespace TelegramStatistics
 {
     public class ChatStatistics : IChatStatistics
     {        
-
         private readonly IChatService _chatService;
         private readonly ITextAnalyzer _textAnalyzer;
 
@@ -16,12 +15,10 @@ namespace TelegramStatistics
         }
 
 
-
         public int GetTotalMessageCount(Chat chat)
         {            
             return chat.Messages!.Count;
         }
-
 
 
         public IEnumerable<WordCount> GetWordsUsage(IEnumerable<Message> messages, int? minimumWordFrequency)
@@ -40,7 +37,6 @@ namespace TelegramStatistics
 
             return wordCounts;
         }
-
 
 
         public IEnumerable<UserWordCount> GetWordsUsagePerUser(Chat chat, int minimumWordFrequency)
@@ -64,7 +60,6 @@ namespace TelegramStatistics
         }
 
 
-
         public Dictionary<string, int> GetMessageCountOfEverySender(Chat chat)
         {
             Dictionary<string, int> userMessageCounts = new();
@@ -76,6 +71,5 @@ namespace TelegramStatistics
 
             return userMessageCounts;
         }
-
     }
 }

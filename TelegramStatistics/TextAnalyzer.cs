@@ -6,7 +6,6 @@ namespace TelegramStatistics
 {
     public class TextAnalyzer : ITextAnalyzer
     {
-
         public IEnumerable<string> SplitTextsIntoWords(IEnumerable<string> texts)
         {
             string pattern = @"[^\p{L}'0-9]|(?<!\w)'(?!\w)";
@@ -18,12 +17,10 @@ namespace TelegramStatistics
         }
 
 
-
         public string ClearTextFromEmoji(string text)
         {
             return Regex.Replace(text, @"\p{Cs}", "");
         }
-
 
 
         public IEnumerable<WordCount> CountWordUsage(IEnumerable<string> words, int? minimumWordFrequency)
@@ -48,7 +45,6 @@ namespace TelegramStatistics
         }
 
 
-
         private static void ExcludeNoninformativeWords(List<WordCount> query)
         {
             List<string> WordUnitsToExclude = new()
@@ -60,6 +56,5 @@ namespace TelegramStatistics
 
             query.RemoveAll(w => WordUnitsToExclude.Contains(w.Text!));
         }
-
     }
 }
