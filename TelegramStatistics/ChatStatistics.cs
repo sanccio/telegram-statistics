@@ -21,37 +21,28 @@ namespace TelegramStatistics
         }
 
 
-        public IEnumerable<WordCount> GetWordsUsage(IEnumerable<Message> messages, int? minimumWordFrequency)
+        public IEnumerable<WordCount> GetWordsUsage(IEnumerable<Message> messages, int? minimumWordFrequency = 1)
         {
-            minimumWordFrequency ??= 1;
+            IEnumerable<string> plainTexts = _chatService.GetPlainTexts(messages);
+            IEnumerable<string> words = _textAnalyzer.SplitTextsIntoWords(plainTexts);
 
-            List<string> plainTexts = new();
-            List<string> words = new();
-            List<WordCount> wordCounts = new();
-
-            plainTexts.AddRange(_chatService.GetPlainTexts(messages));
-
-            words.AddRange(_textAnalyzer.SplitTextsIntoWords(plainTexts));
-
-            wordCounts.AddRange(_textAnalyzer.CountWordUsage(words, minimumWordFrequency));
-
-            return wordCounts;
+            return _textAnalyzer.CountWordUsage(words, minimumWordFrequency);
         }
 
 
-        public IEnumerable<UserWordCount> GetWordsUsagePerUser(Chat chat, int minimumWordFrequency)
+        public IEnumerable<UserWordCount> GetWordsUsagePerUser(Chat chat, int? minimumWordFrequency = 1)
         {
             List<UserWordCount> userWordsStats = new();
 
-            Dictionary<string, List<Message>?> usersMessages = _chatService!.GetUsersMessages(chat.Users!);
+            Dictionary<string, List<Message>?> usersMessages = _chatService.GetUsersMessages(chat.Users!);
 
             foreach (var userMessages in usersMessages)
             {
-                UserWordCount wordCounts = new(); 
-
-                wordCounts.UserWordCounts.AddRange(GetWordsUsage(userMessages.Value!, minimumWordFrequency));
-
-                wordCounts.UserName = userMessages.Key;
+                UserWordCount wordCounts = new()
+                {
+                    UserName = userMessages.Key,
+                    UserWordCounts = GetWordsUsage(userMessages.Value!, minimumWordFrequency).ToList()
+                };
 
                 userWordsStats.Add(wordCounts);
             }
@@ -60,16 +51,18 @@ namespace TelegramStatistics
         }
 
 
-        public Dictionary<string, int> GetMessageCountOfEverySender(Chat chat)
+        public Dictionary<string, int> GetMessageCountPerUser(Chat chat)
         {
-            Dictionary<string, int> userMessageCounts = new();
+            Dictionary<string, int> messageCountPerUser = new();
 
             foreach (var user in chat!.Users!)
             {
-                userMessageCounts.Add(user.From!, user!.Messages!.Count);
+                messageCountPerUser.Add(
+                    key: user.From!,
+                    value: user!.Messages!.Count);
             }
 
-            return userMessageCounts;
+            return messageCountPerUser;
         }
     }
 }

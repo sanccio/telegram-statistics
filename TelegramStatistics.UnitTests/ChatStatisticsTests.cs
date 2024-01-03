@@ -23,7 +23,7 @@ namespace TelegramStatistics.UnitTests
         public void GetMessageCountOfEverySender_ReturnsUserMessagesCount_True()
         {
             _chatService.GroupAllMessagesBySender(_chat);
-            var actualUsersMessageCounts = _chatStatistics.GetMessageCountOfEverySender(_chat);
+            var actualUsersMessageCounts = _chatStatistics.GetMessageCountPerUser(_chat);
 
             Dictionary<string, int> expectedUserMessageCounts = new()
             {
