@@ -4,7 +4,7 @@ using TelegramStatistics.Models;
 namespace TelegramStatistics
 {
     public class ChatStatistics : IChatStatistics
-    {        
+    {
         private readonly IChatService _chatService;
         private readonly ITextAnalyzer _textAnalyzer;
 
@@ -16,7 +16,7 @@ namespace TelegramStatistics
 
 
         public int GetTotalMessageCount(Chat chat)
-        {            
+        {
             return chat.Messages!.Count;
         }
 
@@ -63,6 +63,58 @@ namespace TelegramStatistics
             }
 
             return messageCountPerUser;
+        }
+
+
+        public Dictionary<int, int> GetMessageCountPerYear(Chat chat)
+        {
+            var messageCountPerYear = chat.Messages!
+                .GroupBy(message => message.Date.Year)
+                .ToDictionary(group => group.Key, group => group.Count());
+
+            return messageCountPerYear;
+        }
+
+
+        public Dictionary<int, int> GetMessageCountPerMonth(Chat chat, int year)
+        {
+            var messageCountPerMonth = chat.Messages!
+                .Where(message => message.Date.Year == year)
+                .GroupBy(message => message.Date.Month)
+                .ToDictionary(group => group.Key, group => group.Count());
+
+            return messageCountPerMonth;
+        }
+
+
+        public Dictionary<int, int> GetMessageCountPerHour(Chat chat,
+                                                           int? year = null,
+                                                           int? month = null,
+                                                           int? dayOfMonth = null)
+        {
+            IEnumerable<Message> filteredMessages = chat.Messages!;
+
+            if (year.HasValue)
+            {
+                filteredMessages = filteredMessages.Where(m => m.Date.Year == year);
+            }
+
+            if (month.HasValue)
+            {
+                filteredMessages = filteredMessages.Where(m => m.Date.Month == month);
+            }
+
+            if (dayOfMonth.HasValue)
+            {
+                filteredMessages = filteredMessages.Where(m => m.Date.Day == dayOfMonth);
+            }
+
+            var messageCountPerHour = filteredMessages
+                .GroupBy(message => message.Date.Hour)
+                .OrderBy(message => message.Key)
+                .ToDictionary(group => group.Key, group => group.Count());
+
+            return messageCountPerHour;
         }
     }
 }

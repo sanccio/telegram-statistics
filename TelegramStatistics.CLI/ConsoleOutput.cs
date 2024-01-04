@@ -41,7 +41,6 @@ namespace TelegramStatistics
 
             //Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("| {0,-30} | {1,-8} |", "WORD", "COUNT");
-
             //Console.ResetColor();
 
             Console.WriteLine(new string('-', delimiterLength));
@@ -51,13 +50,10 @@ namespace TelegramStatistics
                 Console.WriteLine("| {0,-30} | {1,-8} |", word.Text, word.Number);
                 Console.WriteLine(new string('-', delimiterLength));
             }
-
         }
 
         public static void PrintTable(IEnumerable<UserWordCount> usersWordCounts)
         {
-            const int delimiterLength = 45;
-
             foreach (var userWordCount in usersWordCounts)
             {
                 // Print table footer
@@ -74,13 +70,38 @@ namespace TelegramStatistics
                     Console.WriteLine($"| {wordCount.Text,-30} | {wordCount.Number,-8} |");
                     Console.WriteLine(new string('-', delimiterLength));
                 }
-
             }
         }
 
+        public static void PrintMessageCountPerYear(Dictionary<int, int> messageCountPerYear)
+        {
+            Console.WriteLine("Message count per year:\n");
+            PrintDictionaryTable(messageCountPerYear, "YEAR", "MESSAGE COUNT");
+        }
 
+        public static void PrintMessageCountPerMonth(Dictionary<int, int> messageCountPerMonth, int year)
+        {
+            Console.WriteLine($"Message count per month for the year {year}:\n");
+            PrintDictionaryTable(messageCountPerMonth, "MONTH", "MESSAGE COUNT");
+        }
 
+        public static void PrintMessageCountPerHour(Dictionary<int, int> messageCountPerHour)
+        {
+            Console.WriteLine($"Active hours:\n");
+            PrintDictionaryTable(messageCountPerHour, "HOUR", "MESSAGE COUNT");
+        }
 
+        private static void PrintDictionaryTable(Dictionary<int, int> source, string keyColumnName, string valueColumnName)
+        {
+            Console.WriteLine("| {0, -19} | {1, -19} |", keyColumnName, valueColumnName);
+            Console.WriteLine(new string('-', delimiterLength));
 
+            foreach (var item in source)
+            {
+                Console.WriteLine("| {0, -19} | {1,-19} |", item.Key, item.Value);
+                Console.WriteLine(new string('-', delimiterLength));
+            }
+            Console.WriteLine();
+        }
     }
 }
