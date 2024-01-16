@@ -1,0 +1,126 @@
+<UserControl
+    x:Class="TelegramStatistics.AvaloniaClient.Views.GeneralInfoView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TelegramStatistics.AvaloniaClient.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:GeneralInfoViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource SofiaProFont}" />
+
+            <Style Selector="^.header">
+                <Setter Property="FontSize" Value="27" />
+            </Style>
+
+            <Style Selector="^.cardHeader">
+                <Setter Property="Margin" Value="0 0 0 5" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="LineHeight" Value="25" />
+            </Style>
+        </Style>
+
+        <Style Selector="Border">
+            <Style Selector="^.card">
+                <Setter Property="Background" Value="#3fdddbf1" />
+                <Setter Property="Padding" Value="18" />
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BoxShadow" Value="0 1 4 0 LightGray" />
+                <Setter Property="CornerRadius" Value="0" />
+            </Style>
+        </Style>
+
+        <Style Selector="DataGridCell">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid
+        Margin="36"
+        ColumnDefinitions="* *"
+        RowDefinitions="* *"
+        ShowGridLines="False">
+
+        <!--  First Card  -->
+
+        <Border Classes="card">
+            <Grid RowDefinitions="Auto *">
+                <StackPanel
+                    Grid.Row="0"
+                    Orientation="Horizontal"
+                    Spacing="5">
+                    <TextBlock Classes="cardHeader">Total message count:</TextBlock>
+                    <TextBlock Classes="cardHeader" Text="{Binding TotalMessageCount}" />
+                </StackPanel>
+
+                <lvc:PieChart
+                    Grid.Row="1"
+                    Padding="-20"
+                    InitialRotation="-90"
+                    IsClockwise="False"
+                    Series="{Binding MessageCountPerSenderSeries}" />
+            </Grid>
+        </Border>
+
+        <!--  Second Card  -->
+
+        <Border
+            Grid.Row="0"
+            Grid.Column="1"
+            Classes="card">
+            <Grid RowDefinitions="Auto *">
+                <TextBlock Classes="cardHeader">
+                    Yearly activity
+                </TextBlock>
+
+                <lvc:CartesianChart
+                    Grid.Row="1"
+                    Padding="15,0,5,0"
+                    Series="{Binding YerlyActivitySeries}"
+                    XAxes="{Binding XAxes}"
+                    YAxes="{Binding YAxes}" />
+            </Grid>
+        </Border>
+
+        <!--  Third Card  -->
+
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Classes="card">
+            <Grid RowDefinitions="Auto *">
+                <TextBlock Grid.Row="0" Classes="cardHeader">
+                    Most active days
+                </TextBlock>
+                <DataGrid
+                    Grid.Row="1"
+                    BorderBrush="Gray"
+                    CanUserSortColumns="False"
+                    FontFamily="{StaticResource SofiaProFont}"
+                    GridLinesVisibility="Horizontal"
+                    HeadersVisibility="None"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding ActiveDays}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Binding="{Binding PlaceNumber}" />
+                        <DataGridTextColumn Width="*" Binding="{Binding Date}" />
+                        <DataGridTextColumn Width="*" Binding="{Binding MessageCount}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!--  Fourth Card  -->
+
+
+
+    </Grid>
+</UserControl>

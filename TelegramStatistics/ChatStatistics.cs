@@ -17,7 +17,7 @@ namespace TelegramStatistics
 
         public int GetTotalMessageCount(Chat chat)
         {
-            return chat.Messages!.Count;
+            return chat.Users.Sum(x => x.Messages.Count);
         }
 
 
@@ -115,6 +115,19 @@ namespace TelegramStatistics
                 .ToDictionary(group => group.Key, group => group.Count());
 
             return messageCountPerHour;
+        }
+
+
+        public Dictionary<string, int> GetTopActiveDates(Chat chat, int count)
+        {
+            var topActiveDays = chat.Messages
+                    .GroupBy(m => m.Date.ToShortDateString())
+                    .Select(g => new { Date = g.Key, MessageCount = g.Count() })
+                    .OrderByDescending(x => x.MessageCount)
+                    .Take(count)
+                    .ToDictionary(x => x.Date, x => x.MessageCount);
+
+            return topActiveDays;
         }
     }
 }

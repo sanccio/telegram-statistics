@@ -1,0 +1,97 @@
+<UserControl
+    x:Class="TelegramStatistics.AvaloniaClient.Views.HomePageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TelegramStatistics.AvaloniaClient.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:HomePageViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="Button">
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="#028D3C" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="Cursor" Value="Hand" />
+            </Style>
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource SofiaProFont}" />
+            <Style Selector="^.Header">
+                <Setter Property="FontSize" Value="27" />
+            </Style>
+            <Style Selector="^.UserManual">
+                <Setter Property="Margin" Value="0 0 0 15" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="LineHeight" Value="25" />
+            </Style>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid
+        Margin="50"
+        RowDefinitions="50,*,*"
+        ShowGridLines="False">
+        <!--  Grid Lines  -->
+
+        <TextBlock Grid.Row="0" Classes="Header">
+            Home
+        </TextBlock>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock Classes="UserManual">
+                1. Open the desired Telegram chat and click on the three-dot menu. Select the "Export chat history" option.
+            </TextBlock>
+
+            <TextBlock Classes="UserManual">
+                2. In the opened pop-up window "Chat export settings", uncheck all checkboxes, switch the format from HTML to JSON,
+                and specify the required date range. Click the "Export" button.
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2">
+            <TextBlock
+                Margin="10"
+                HorizontalAlignment="Center"
+                FontFamily="{StaticResource PoppinsFont}"
+                FontSize="16">
+                Only .json format is supported
+            </TextBlock>
+
+            <Button
+                Width="150"
+                Height="45"
+                Margin="0,0,0,50"
+                HorizontalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="#03b04c"
+                Command="{Binding OpenFileCommand}"
+                FontFamily="{StaticResource PoppinsFont}"
+                FontSize="16"
+                Foreground="White">
+                Choose File
+            </Button>
+
+            <StackPanel
+                Grid.Row="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="10">
+                <PathIcon Data="{Binding FileStatusIcon}" Foreground="{Binding FileStatusIconColor}" />
+                <TextBlock
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Bottom"
+                    FontSize="16"
+                    Text="{Binding FileChoosingOperationStatus}" />
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</UserControl>

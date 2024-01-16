@@ -1,0 +1,26 @@
+﻿<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!--  Add Controls for Previewer Here  -->
+            <ComboBox SelectedIndex="0">
+              <ComboBoxItem>2024</ComboBoxItem>
+            </ComboBox>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="ComboBox">
+        <Setter Property="BorderBrush" Value="LightGray" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12 0 10 0" />
+        <Setter Property="FontFamily" Value="{StaticResource PoppinsFont}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Height" Value="37" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Style Selector="^:pointerover /template/ Border">
+            <Setter Property="BorderBrush" Value="#EBEBEB" />
+            <Setter Property="Background" Value="#EBEBEB" />
+        </Style>
+    </Style>
+
+</Styles>

@@ -1,0 +1,24 @@
+<Application
+    x:Class="TelegramStatistics.AvaloniaClient.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TelegramStatistics.AvaloniaClient"
+    RequestedThemeVariant="Default">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://TelegramStatistics.AvaloniaClient/Assets/icons.axaml" />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+    </Application.Styles>
+
+    <Application.Resources>
+        <FontFamily x:Key="PoppinsFont">avares://TelegramStatistics.AvaloniaClient/Assets/Fonts#Poppins</FontFamily>
+        <FontFamily x:Key="OutfitFont">avares://TelegramStatistics.AvaloniaClient/Assets/Fonts#Outfit</FontFamily>
+        <FontFamily x:Key="SofiaProFont">avares://TelegramStatistics.AvaloniaClient/Assets/Fonts#Sofia</FontFamily>
+    </Application.Resources>
+</Application>

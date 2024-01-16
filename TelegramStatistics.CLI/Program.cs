@@ -8,8 +8,8 @@ Console.OutputEncoding = Encoding.UTF8;
 Console.WriteLine("To get statistics, export your Telegram chat history in .json format without specifying any parameters.\n");
 
 IDeserializer deserializer = new JsonDeserializer();
-string telegramChatFilePath = RequestFilePathFromUser();
-Chat chat = await deserializer.DeserializeFile(telegramChatFilePath);
+//string telegramChatFilePath = RequestFilePathFromUser();
+Chat chat = await deserializer.DeserializeFile("C:\\Users\\sanch\\Desktop\\ChatExport_2024-01-02\\result.json");
 
 IChatService chatService = new ChatService(chat);
 ITextAnalyzer textAnalyzer = new TextAnalyzer();

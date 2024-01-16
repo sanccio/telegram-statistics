@@ -1,0 +1,96 @@
+<Window
+    x:Class="TelegramStatistics.AvaloniaClient.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:TelegramStatistics.AvaloniaClient.ViewModels"
+    Title="TelegramStatistics.AvaloniaClient"
+    d:DesignHeight="720"
+    d:DesignWidth="1280"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="ListBox">
+            <Setter Property="FontFamily" Value="{StaticResource PoppinsFont}" />
+            <Setter Property="Background" Value="#4d5dfa" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="Margin" Value="6 24" />
+        </Style>
+
+        <Style Selector="ListBoxItem">
+            <Setter Property="Height" Value="50" />
+
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Cursor" Value="Hand" />
+            </Style>
+
+            <Style Selector="^:selected">
+                <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                    <Setter Property="Background" Value="#7481fb" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="CornerRadius" Value="10" />
+                </Style>
+            </Style>
+        </Style>
+
+        <Style Selector="SplitView.Pane">
+            <Setter Property="Height" Value="200" />
+        </Style>
+
+        <Style Selector="SplitView">
+            <Setter Property="Background" Value="White" />
+            <!--<Setter Property="Background" Value="#f3f7fa" />-->
+            <!--  COLOR  -->
+        </Style>
+    </Window.Styles>
+
+    <SplitView
+        DisplayMode="CompactInline"
+        IsPaneOpen="True"
+        OpenPaneLength="230"
+        PaneBackground="White">
+        <!--  COLOR  -->
+        <SplitView.Pane>
+            <Border Background="#4d5dfa" CornerRadius="0 40 40 0">
+                <StackPanel Margin="5" Spacing="5">
+                    <ListBox
+                        Background="#4d5dfa"
+                        ItemsSource="{Binding Items}"
+                        SelectedItem="{Binding SelectedListItem}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:ListItemTemplate}">
+                                <StackPanel
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="15">
+                                    <PathIcon Data="{Binding ListItemIcon}" Foreground="White" />
+                                    <TextBlock FontSize="16" Text="{Binding Label}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+        </SplitView.Pane>
+
+        <SplitView.Content>
+            <TransitioningContentControl Content="{Binding CurrentPage}" />
+        </SplitView.Content>
+    </SplitView>
+
+</Window>
