@@ -36,7 +36,7 @@ namespace TelegramStatistics
 
                 foreach (var wordCount in userWordCount.UserWordCounts)
                 {
-                    writer.WriteLine($"| {wordCount.Text,-30} | {wordCount.Number,-8} |");
+                    writer.WriteLine($"| {wordCount.Text,-30} | {wordCount.Count,-8} |");
                     writer.WriteLine(new string('-', delimiterLength));
                 }
 
@@ -51,7 +51,7 @@ namespace TelegramStatistics
 
             foreach (var word in result)
             {
-                writer.WriteLine("| {0,-30} | {1,-8} |", word.Text, word.Number);
+                writer.WriteLine("| {0,-30} | {1,-8} |", word.Text, word.Count);
                 writer.WriteLine(new string('-', delimiterLength));
             }
         }

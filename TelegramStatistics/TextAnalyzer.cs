@@ -33,10 +33,10 @@ namespace TelegramStatistics
                 .Select(x => new WordCount
                 {
                     Text = x.Key,
-                    Number = x.Count()
+                    Count = x.Count()
                 })
-                .Where(x => x.Number >= minimumWordFrequency)
-                .OrderByDescending(x => x.Number)
+                .Where(x => x.Count >= minimumWordFrequency)
+                .OrderByDescending(x => x.Count)
                 .ToList();
 
             ExcludeNoninformativeWords(query);

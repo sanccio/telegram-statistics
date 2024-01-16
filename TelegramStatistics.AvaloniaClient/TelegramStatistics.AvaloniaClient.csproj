@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Fonts\Mulish-Medium.ttf" />
     <None Remove="Assets\Fonts\Outfit-Regular.ttf" />
     <None Remove="Assets\Fonts\Poppins-Medium.ttf" />
     <None Remove="Assets\Fonts\Poppins-Regular.ttf" />

@@ -48,9 +48,9 @@ namespace TelegramStatistics.UnitTests
 
             List<WordCount> expectedWordUsage = new()
             {
-                new WordCount(){ Text = "Весна", Number = 3},
-                new WordCount(){ Text = "Зима", Number = 2},
-                new WordCount(){ Text = "Лето", Number = 1}
+                new WordCount(){ Text = "Весна", Count = 3},
+                new WordCount(){ Text = "Зима", Count = 2},
+                new WordCount(){ Text = "Лето", Count = 1}
             };
 
             Assert.That(actualWordUsage.Select(x => x.Text), Is.EqualTo(expectedWordUsage.Select(x => x.Text)));

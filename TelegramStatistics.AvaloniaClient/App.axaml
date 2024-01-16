@@ -20,5 +20,6 @@
         <FontFamily x:Key="PoppinsFont">avares://TelegramStatistics.AvaloniaClient/Assets/Fonts#Poppins</FontFamily>
         <FontFamily x:Key="OutfitFont">avares://TelegramStatistics.AvaloniaClient/Assets/Fonts#Outfit</FontFamily>
         <FontFamily x:Key="SofiaProFont">avares://TelegramStatistics.AvaloniaClient/Assets/Fonts#Sofia</FontFamily>
+        <FontFamily x:Key="MulishFont">avares://TelegramStatistics.AvaloniaClient/Assets/Fonts#Mulish</FontFamily>
     </Application.Resources>
 </Application>

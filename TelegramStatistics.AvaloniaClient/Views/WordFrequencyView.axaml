@@ -1,0 +1,132 @@
+<UserControl
+    x:Class="TelegramStatistics.AvaloniaClient.Views.WordFrequencyView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TelegramStatistics.AvaloniaClient.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:WordFrequencyViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+
+            <Style Selector="^.header">
+                <Setter Property="FontSize" Value="27" />
+                <Setter Property="FontFamily" Value="{StaticResource SofiaProFont}" />
+            </Style>
+
+            <Style Selector="^.tableHeader">
+                <Setter Property="FontFamily" Value="{StaticResource MulishFont}" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+        </Style>
+    </UserControl.Styles>
+
+
+    <Grid
+        Margin="50"
+        ColumnDefinitions="* * *"
+        RowDefinitions="60 30 *"
+        ShowGridLines="False">
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Classes="header">
+            Word Frequency
+        </TextBlock>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Orientation="Horizontal"
+            Spacing="2">
+            <TextBlock Classes="tableHeader">General statistics</TextBlock>
+        </StackPanel>
+
+        <DataGrid
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="20"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            GridLinesVisibility="All"
+            IsReadOnly="True"
+            ItemsSource="{Binding GeneralWordUsage}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Text}"
+                    Header="Word" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Count}"
+                    Header="Frequency" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            Orientation="Horizontal"
+            Spacing="3">
+            <TextBlock Classes="tableHeader">Statistics for</TextBlock>
+            <TextBlock Classes="tableHeader" Text="{Binding FirstSenderName}" />
+        </StackPanel>
+
+        <DataGrid
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="20"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            GridLinesVisibility="All"
+            IsReadOnly="True"
+            ItemsSource="{Binding FirstSenderWordUsage}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Text}"
+                    Header="Word" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Count}"
+                    Header="Frequency" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="2"
+            Orientation="Horizontal"
+            Spacing="3">
+            <TextBlock Classes="tableHeader">Statistics for</TextBlock>
+            <TextBlock Classes="tableHeader" Text="{Binding SecondSenderName}" />
+        </StackPanel>
+
+        <DataGrid
+            Grid.Row="2"
+            Grid.Column="2"
+            Margin="20"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            GridLinesVisibility="All"
+            IsReadOnly="True"
+            ItemsSource="{Binding SecondSenderWordUsage}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Text}"
+                    Header="Word" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Count}"
+                    Header="Frequency" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

@@ -35,6 +35,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
             new ListItemTemplate(typeof(GeneralInfoViewModel), "board_regular"),
             new ListItemTemplate(typeof(MonthlyStatsPageViewModel), "calendar_month_regular"),
             new ListItemTemplate(typeof(HourlyStatsPageViewModel), "clock_regular"),
+            new ListItemTemplate(typeof(WordFrequencyViewModel), "text_word_count_regular"),
         };
 
         [RelayCommand]
