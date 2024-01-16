@@ -68,7 +68,7 @@ namespace TelegramStatistics.AvaloniaClient.Models
             return new ChatStatistics(chatService, textAnalyzer);
         }
 
-        public  static int[] GetChatActiveYears()
+        public static int[] GetChatActiveYears()
         {
             var activeYears = Chat.Messages!
                 .Select(x => x.Date.Year)

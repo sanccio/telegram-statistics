@@ -62,7 +62,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
             _hourlyStats = GetHourlyStats(SelectedYearCombobox);
             HourlyMessageCounts = MapHourlyMessageCounts();
 
-            ChatActiveYears = GetChatActiveYears();
+            ChatActiveYears = ChatModel.GetChatActiveYears();
             SelectedYearCombobox = ChatActiveYears.FirstOrDefault();
 
             XAxes = SetXAxes();
@@ -142,17 +142,6 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                     Padding = new Padding(0,0,15,0),
                 }
             };
-        }
-
-
-        private static int[] GetChatActiveYears()
-        {
-            var activeYears = ChatModel.Chat.Messages
-                .Select(m => m.Date.Year)
-                .Distinct()
-                .ToArray();
-
-            return activeYears;
         }
 
 
