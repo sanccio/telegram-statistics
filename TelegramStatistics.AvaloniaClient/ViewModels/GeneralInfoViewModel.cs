@@ -4,14 +4,13 @@ using System.Linq;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.VisualElements;
 using System.Collections.ObjectModel;
 using TelegramStatistics.AvaloniaClient.Models;
 using LiveChartsCore.Drawing;
 using System;
 using System.Globalization;
-using DynamicData.Aggregation;
-using System.Xml.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
+using TelegramStatistics.AvaloniaClient.Utils;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
@@ -19,13 +18,15 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
     {
         const int MaxPieCount = 3;
 
-        private Dictionary<string, int> _messageCountPerSenderStats;
+        public List<string> ChatActiveYears { get; set; } = new();
+
+        private Dictionary<string, int> _messageCountPerSenderStats = new();
 
         private Dictionary<int, int> _messageCountPerYearStats;
 
         public ObservableCollection<ActiveDay> ActiveDays { get; set; }
 
-        public string TotalMessageCount { get; set; }
+        [ObservableProperty] string _totalMessageCount;
 
         public List<ISeries> MessageCountPerSenderSeries { get; set; } = new();
 
@@ -35,21 +36,46 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
         public List<Axis> YAxes { get; set; }
 
+        [ObservableProperty] private string _selectedYearCombobox;
+
+        partial void OnSelectedYearComboboxChanged(string value)
+        {
+            int? year = ParsingUtils.StringToNumeric(value);
+
+            _messageCountPerSenderStats = GetSendersMessageCount(year);
+            SetMessageCountPerSenderSeries(_messageCountPerSenderStats, PieChartColorPalette.Colors);
+
+            TotalMessageCount = _messageCountPerSenderStats.Values.Sum(messageCount => messageCount).ToString();
+        }
+
 
         public GeneralInfoViewModel()
         {
+            SetChatActiveYears();
+            SelectedYearCombobox = ChatActiveYears.First();
+
             TotalMessageCount = GetTotalMessageCountStats();
-            
-            _messageCountPerSenderStats = GetSendersMessageCount();
+
             SetMessageCountPerSenderSeries(_messageCountPerSenderStats, PieChartColorPalette.Colors);
             XAxes = SetXAxes();
             YAxes = SetYAxes();
-            
+
             _messageCountPerYearStats = GetYearlyMessageStats();
             YerlyActivitySeries = CreateLineSeries();
 
             var activeDaysRange = GetTopActiveDatesStats(count: 7);
             ActiveDays = new ObservableCollection<ActiveDay>(activeDaysRange);
+        }
+
+
+        private void SetChatActiveYears()
+        {
+            ChatActiveYears.Add("All Time");
+
+            var comboboxItems = ChatModel.GetChatActiveYears()
+                .Select(year => year.ToString());
+
+            ChatActiveYears.AddRange(comboboxItems);
         }
 
 
@@ -101,9 +127,9 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private static Dictionary<string, int> GetSendersMessageCount()
+        private static Dictionary<string, int> GetSendersMessageCount(int? year = null)
         {
-            return ChatModel.ChatStats.GetMessageCountPerUser(ChatModel.Chat);
+            return ChatModel.ChatStats.GetMessageCountPerUser(ChatModel.Chat, year);
         }
 
 
@@ -132,6 +158,8 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
         private void SetMessageCountPerSenderSeries(Dictionary<string, int> sendersMessageCount, List<SKColor>? colors = null)
         {
+            MessageCountPerSenderSeries.Clear();
+
             int colorIndex = 0;
 
             foreach (var senderStats in sendersMessageCount.Take(MaxPieCount))
@@ -186,7 +214,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
         private static List<Axis> SetYAxes()
         {
-            return new List<Axis> 
+            return new List<Axis>
             {
                 new() {
                     Padding = new Padding(0,0,5,0),

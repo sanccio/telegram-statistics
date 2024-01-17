@@ -1,4 +1,5 @@
-﻿using TelegramStatistics.Interfaces;
+﻿using System.Diagnostics;
+using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
 namespace TelegramStatistics
@@ -51,15 +52,29 @@ namespace TelegramStatistics
         }
 
 
-        public Dictionary<string, int> GetMessageCountPerUser(Chat chat)
+        public Dictionary<string, int> GetMessageCountPerUser(Chat chat, int? year = null)
         {
             Dictionary<string, int> messageCountPerUser = new();
 
-            foreach (var user in chat!.Users!)
+            if (year != null)
             {
-                messageCountPerUser.Add(
-                    key: user.From!,
-                    value: user!.Messages!.Count);
+                foreach (var user in chat!.Users!)
+                {
+                    messageCountPerUser.Add(
+                        key: user.From!,
+                        value: user!.Messages!.Count(m => m.Date.Year == year));
+                }
+            }
+            else
+            {
+
+                foreach (var user in chat!.Users!)
+                {
+                    messageCountPerUser.Add(
+                        key: user.From!,
+                        value: user!.Messages!.Count);
+                }
+
             }
 
             return messageCountPerUser;

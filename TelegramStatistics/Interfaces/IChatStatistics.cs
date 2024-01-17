@@ -10,7 +10,7 @@ namespace TelegramStatistics.Interfaces
 
         public IEnumerable<UserWordCount> GetWordsUsagePerUser(Chat chat, int? minimumWordFrequency = 1);
 
-        public Dictionary<string, int> GetMessageCountPerUser(Chat chat);
+        public Dictionary<string, int> GetMessageCountPerUser(Chat chat, int? year = null);
 
         public Dictionary<int, int> GetMessageCountPerYear(Chat chat);
 

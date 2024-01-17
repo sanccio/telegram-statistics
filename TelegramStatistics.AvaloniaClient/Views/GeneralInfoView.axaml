@@ -53,13 +53,20 @@
 
         <Border Classes="card">
             <Grid RowDefinitions="Auto *">
-                <StackPanel
-                    Grid.Row="0"
-                    Orientation="Horizontal"
-                    Spacing="5">
-                    <TextBlock Classes="cardHeader">Total message count:</TextBlock>
-                    <TextBlock Classes="cardHeader" Text="{Binding TotalMessageCount}" />
-                </StackPanel>
+                <Panel>
+                    <StackPanel
+                        Grid.Row="0"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                        <TextBlock Classes="cardHeader">Total message count:</TextBlock>
+                        <TextBlock Classes="cardHeader" Text="{Binding TotalMessageCount}" />
+                    </StackPanel>
+
+                    <ComboBox
+                        HorizontalAlignment="Right"
+                        ItemsSource="{Binding ChatActiveYears}"
+                        SelectedItem="{Binding SelectedYearCombobox}" />
+                </Panel>
 
                 <lvc:PieChart
                     Grid.Row="1"
