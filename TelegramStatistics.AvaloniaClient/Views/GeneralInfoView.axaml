@@ -15,7 +15,6 @@
         <StyleInclude Source="/Assets/ComboBox.axaml" />
 
         <Style Selector="ComboBox">
-            <Setter Property="Background" Value="" />
             <Setter Property="Height" Value="32" />
         </Style>
 
