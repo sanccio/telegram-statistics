@@ -1,5 +1,4 @@
 ﻿using DynamicData;
-using MicroCom.Runtime;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,6 +12,8 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
     {
         const int MinWordFrequency = 10;
         const string UnknownUserName = "Unknown";
+
+        private IEnumerable<UserWordCount> _userWordCounts = new List<UserWordCount>();
 
         public ObservableCollection<WordCount> GeneralWordUsage { get; set; } = new();
 
@@ -28,8 +29,10 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         public WordFrequencyViewModel()
         {
             SetGeneralWordStats();
-            SetSenderStats(0, MinWordFrequency);
-            SetSenderStats(1, MinWordFrequency);
+
+            _userWordCounts = GetWordFrequencyPerUser(MinWordFrequency);
+            SetSenderStats(0);
+            SetSenderStats(1);
         }
 
 
@@ -40,11 +43,9 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private void SetSenderStats(int senderIndex, int? minWordFrequency = 1)
+        private void SetSenderStats(int senderIndex)
         {
-            UserWordCount senderUserWordCount = ChatModel.ChatStats
-                .GetWordsUsagePerUser(ChatModel.Chat, minWordFrequency)
-                .ElementAtOrDefault(senderIndex) ?? new UserWordCount();
+            UserWordCount senderUserWordCount = _userWordCounts.ElementAtOrDefault(senderIndex) ?? new UserWordCount();
 
             if (senderIndex == 0)
             {
@@ -56,6 +57,11 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                 SecondSenderWordUsage.AddRange(senderUserWordCount.UserWordCounts);
                 SecondSenderName = senderUserWordCount.UserName ?? UnknownUserName;
             }
+        }
+
+        private static IEnumerable<UserWordCount> GetWordFrequencyPerUser(int? minWordFrequency)
+        {
+            return ChatModel.ChatStats.GetWordsUsagePerUser(ChatModel.Chat, minWordFrequency);
         }
     }
 }
