@@ -1,13 +1,10 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using SkiaSharp;
-using System.Diagnostics;
 using System;
-using System.Drawing;
 using TelegramStatistics.AvaloniaClient.ViewModels;
 using TelegramStatistics.AvaloniaClient.Views;
 using System.IO;
@@ -26,7 +23,6 @@ namespace TelegramStatistics.AvaloniaClient
 
             LiveCharts.Configure(config =>
                 config
-                    // Register your custom typeface
                     .HasGlobalSKTypeface(customTypeface)
             );
         }
