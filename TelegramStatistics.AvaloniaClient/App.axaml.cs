@@ -5,9 +5,12 @@ using Avalonia.Markup.Xaml;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using SkiaSharp;
+using System.Diagnostics;
+using System;
 using System.Drawing;
 using TelegramStatistics.AvaloniaClient.ViewModels;
 using TelegramStatistics.AvaloniaClient.Views;
+using System.IO;
 
 namespace TelegramStatistics.AvaloniaClient
 {
@@ -17,9 +20,7 @@ namespace TelegramStatistics.AvaloniaClient
         {
             AvaloniaXamlLoader.Load(this);
 
-            //Application.Current!.TryFindResource("PoppinsFont", out var resource);
-
-            string fontFilePath = "C:\\Users\\sanch\\Desktop\\Mulish-Medium.ttf";
+            string fontFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mulish-Medium.ttf");
 
             SKTypeface customTypeface = SKTypeface.FromFile(fontFilePath);
 

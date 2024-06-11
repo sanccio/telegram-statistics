@@ -6,7 +6,7 @@
     xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:TelegramStatistics.AvaloniaClient.ViewModels"
-    Title="TelegramStatistics.AvaloniaClient"
+    Title="Telegram Statistics"
     d:DesignHeight="720"
     d:DesignWidth="1280"
     x:DataType="vm:MainWindowViewModel"
