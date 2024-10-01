@@ -56,6 +56,7 @@
         <lvc:CartesianChart
             Grid.Row="2"
             Padding="25"
+            LegendPosition="Top"
             Series="{Binding Series}"
             XAxes="{Binding XAxes}"
             YAxes="{Binding YAxes}" />

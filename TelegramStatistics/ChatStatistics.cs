@@ -102,7 +102,7 @@ namespace TelegramStatistics
         }
 
 
-        public Dictionary<int, int> GetMessageCountPerHour(Chat chat,
+        public Dictionary<int, int> GetAggregateMessageCountPerHour(Chat chat,
                                                            int? year = null,
                                                            int? month = null,
                                                            int? dayOfMonth = null)
@@ -128,6 +128,45 @@ namespace TelegramStatistics
                 .GroupBy(message => message.Date.Hour)
                 .OrderBy(message => message.Key)
                 .ToDictionary(group => group.Key, group => group.Count());
+
+            return messageCountPerHour;
+        }
+
+
+        public List<HourlyMessageCount> GetIndividualMessageCountPerHour(Chat chat,
+                                                           int? year = null,
+                                                           int? month = null,
+                                                           int? dayOfMonth = null)
+        {
+            IEnumerable<Message> filteredMessages = chat.Messages!.Where(m => m.Type != "service");
+
+            if (year.HasValue)
+            {
+                filteredMessages = filteredMessages.Where(m => m.Date.Year == year);
+            }
+
+            if (month.HasValue)
+            {
+                filteredMessages = filteredMessages.Where(m => m.Date.Month == month);
+            }
+
+            if (dayOfMonth.HasValue)
+            {
+                filteredMessages = filteredMessages.Where(m => m.Date.Day == dayOfMonth);
+            }
+
+            var messageCountPerHour = filteredMessages
+                .GroupBy(message => message.Date.Hour)
+                .OrderBy(message => message.Key)
+                .Select(group => new HourlyMessageCount()
+                {
+                    Hour = group.Key,
+                    UserMessageCount = group
+                        .GroupBy(m => m.From!)
+                        .OrderBy(group => group.Key)
+                        .ToDictionary(group => group.Key, group => group.Count())
+                })
+                .ToList();
 
             return messageCountPerHour;
         }

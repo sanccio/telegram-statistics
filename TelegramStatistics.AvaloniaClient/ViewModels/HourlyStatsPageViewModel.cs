@@ -11,22 +11,24 @@ using System.Globalization;
 using System;
 using Avalonia.Controls;
 using LiveChartsCore.Drawing;
+using TelegramStatistics.Models;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
     public partial class HourlyStatsPageViewModel : ViewModelBase
     {
-        private Dictionary<int, int> _hourlyStats = new();
+        private List<HourlyMessageCount> _hourlyStats;
 
         public int[] ChatActiveYears { get; set; }
 
-        public List<MessageCountPerHour> HourlyMessageCounts { get; set; }
+        public IReadOnlyList<MessageCountPerHour> HourlyMessageCounts { get; set; }
 
-        public List<Axis> XAxes { get; set; }
+        public IReadOnlyList<Axis> XAxes { get; set; }
 
-        public List<Axis> YAxes { get; set; }
+        public IReadOnlyList<Axis> YAxes { get; set; }
 
-        [ObservableProperty] private ISeries[] _series;
+        [ObservableProperty] 
+        private IReadOnlyList<ISeries> _series;
         
 
         [ObservableProperty] 
@@ -91,32 +93,44 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private static Dictionary<int, int> GetHourlyStats(int? year, int? month = null)
+        private static List<HourlyMessageCount> GetHourlyStats(int? year, int? month = null)
         {
-            return ChatModel.ChatStats.GetMessageCountPerHour(ChatModel.Chat, year, month);
+            return ChatModel.ChatStats.GetIndividualMessageCountPerHour(ChatModel.Chat, year, month);
         }
 
 
-        private ISeries[] SetSeries()
+        private IReadOnlyList<ISeries> SetSeries()
         {
-            var series = new ISeries[]
+            string[] chatParticipants = HourlyMessageCounts
+                .SelectMany(x => x.UserMessageCount.Keys)
+                .Distinct()
+                .ToArray();
+
+            var series = new List<ISeries>();
+            int colorIndexFromEnd = 1;
+
+            foreach (string participant in chatParticipants)
             {
-                new ColumnSeries<int>
+                IEnumerable<int> participantMessageCounts = HourlyMessageCounts
+                    .Select(x => x.UserMessageCount.GetValueOrDefault(participant));
+
+                var columnSeries = new ColumnSeries<int>()
                 {
-                    Name = "Message count",
-                    Values = HourlyMessageCounts.Select(x => x.MessageCount),
+                    Name = participant,
+                    Values = participantMessageCounts,
+                    MaxBarWidth = 12,
                     Padding = 3,
-                    MaxBarWidth = 20,
-                    Fill = new SolidColorPaint(new SKColor(146, 135, 121)),
-                    //Fill = new SolidColorPaint(new SKColor(212, 186, 175)),
-                }
-            };
+                    Fill = new SolidColorPaint(PieChartColorPalette.Colors[^colorIndexFromEnd++])
+                };
+
+                series.Add(columnSeries);
+            }
 
             return series;
         }
 
 
-        private List<Axis> SetXAxes()
+        private IReadOnlyList<Axis> SetXAxes()
         {
             return new List<Axis>
             {
@@ -125,13 +139,16 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                     Labels = HourlyMessageCounts.Select(x => x.Hour.ToString()).ToList(),
                     TextSize = CommonChartOptions.FontSize,
                     Padding = new Padding(8,15,8,0),
-                    LabelsRotation = -45
+                    LabelsRotation = -45,
+                    TicksPaint = new SolidColorPaint(new SKColor(35, 35, 35)),
+                    TicksAtCenter = true,
+                    ShowSeparatorLines = false,
                 }
             };
         }
 
 
-        private static List<Axis> SetYAxes()
+        private static IReadOnlyList<Axis> SetYAxes()
         {
             return new List<Axis>
             {
@@ -145,14 +162,15 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private List<MessageCountPerHour> MapHourlyMessageCounts()
+        private IReadOnlyList<MessageCountPerHour> MapHourlyMessageCounts()
         {
-            List<MessageCountPerHour> statistics = new();
+            List<MessageCountPerHour> statistics = new(
+                Enumerable.Range(0, 24).Select(hour => new MessageCountPerHour { Hour = hour })
+            );
 
-            for (int hour = 0; hour < 24; hour++)
+            foreach (HourlyMessageCount item in _hourlyStats)
             {
-                int messageCountForHour = _hourlyStats.TryGetValue(hour, out int value) ? value : 0;
-                statistics.Add(new MessageCountPerHour { Hour = hour, MessageCount = messageCountForHour });
+                statistics[item.Hour].UserMessageCount = item.UserMessageCount;
             }
 
             return statistics;
@@ -162,7 +180,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
     public class MessageCountPerHour
     {
-        public int MessageCount { get; set; }
         public int Hour { get; set; }
+        public Dictionary<string, int> UserMessageCount { get; set; } = new();
     }
 }

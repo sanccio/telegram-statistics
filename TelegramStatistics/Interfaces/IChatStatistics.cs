@@ -16,7 +16,9 @@ namespace TelegramStatistics.Interfaces
 
         public Dictionary<int, int> GetMessageCountPerMonth(Chat chat, int year);
 
-        public Dictionary<int, int> GetMessageCountPerHour(Chat chat, int? year = null, int? month = null, int? dayOfMonth = null);
+        public Dictionary<int, int> GetAggregateMessageCountPerHour(Chat chat, int? year = null, int? month = null, int? dayOfMonth = null);
+        
+        public List<HourlyMessageCount> GetIndividualMessageCountPerHour(Chat chat, int? year = null, int? month = null, int? dayOfMonth = null);
 
         public Dictionary<string, int> GetTopActiveDates(Chat chat, int count);
     }
