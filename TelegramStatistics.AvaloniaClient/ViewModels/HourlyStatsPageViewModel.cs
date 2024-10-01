@@ -65,7 +65,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
             HourlyMessageCounts = MapHourlyMessageCounts();
 
             ChatActiveYears = ChatModel.GetChatActiveYears();
-            SelectedYearCombobox = ChatActiveYears.FirstOrDefault();
+            SelectedYearCombobox = ChatActiveYears.LastOrDefault();
 
             XAxes = SetXAxes();
             YAxes = SetYAxes();

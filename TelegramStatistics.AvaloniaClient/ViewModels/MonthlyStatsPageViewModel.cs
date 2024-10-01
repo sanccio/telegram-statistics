@@ -40,7 +40,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
             _messageCountPerMonthStats = GetMonthlyStats(SelectedYearCombobox);
 
             ChatActiveYears = ChatModel.GetChatActiveYears();
-            SelectedYearCombobox = ChatActiveYears.FirstOrDefault();
+            SelectedYearCombobox = ChatActiveYears.LastOrDefault();
 
             XAxes = SetXAxes();
             YAxes = SetYAxes();
