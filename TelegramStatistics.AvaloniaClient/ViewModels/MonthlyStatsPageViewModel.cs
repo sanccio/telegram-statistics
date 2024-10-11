@@ -5,15 +5,17 @@ using System.Linq;
 using System.Globalization;
 using TelegramStatistics.AvaloniaClient.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using LiveChartsCore.Drawing;
+using TelegramStatistics.Interfaces;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
     public partial class MonthlyStatsPageViewModel : ViewModelBase
     {
+        private readonly IChatStatistics _chatStatistics;
+
         private Dictionary<int, int> _messageCountPerMonthStats;
 
         public int[] ChatActiveYears { get; set; }
@@ -35,11 +37,13 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        public MonthlyStatsPageViewModel()
+        public MonthlyStatsPageViewModel(IChatStatistics chatStatistics)
         {
+            _chatStatistics = chatStatistics;
+
             _messageCountPerMonthStats = GetMonthlyStats(SelectedYearCombobox);
 
-            ChatActiveYears = ChatModel.ChatStats.GetChatActiveYears();
+            ChatActiveYears = _chatStatistics.GetChatActiveYears();
             SelectedYearCombobox = ChatActiveYears.FirstOrDefault();
 
             XAxes = SetXAxes();
@@ -48,9 +52,9 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private static Dictionary<int, int> GetMonthlyStats(int year)
+        private Dictionary<int, int> GetMonthlyStats(int year)
         {
-            return ChatModel.ChatStats.GetMessageCountPerMonth(year);
+            return _chatStatistics.GetMessageCountPerMonth(year);
         }
 
 

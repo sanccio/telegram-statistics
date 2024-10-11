@@ -11,12 +11,15 @@ using System;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using TelegramStatistics.AvaloniaClient.Utils;
+using TelegramStatistics.Interfaces;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
     public partial class GeneralInfoViewModel : ViewModelBase
     {
         const int MaxPieCount = 3;
+
+        private readonly IChatStatistics _chatStatistics;
 
         public List<string> ChatActiveYears { get; set; } = new();
 
@@ -49,8 +52,10 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        public GeneralInfoViewModel()
+        public GeneralInfoViewModel(IChatStatistics chatStatistics)
         {
+            _chatStatistics = chatStatistics;
+
             SetChatActiveYears();
             SelectedYearCombobox = ChatActiveYears.First();
 
@@ -72,22 +77,22 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         {
             ChatActiveYears.Add("All Time");
 
-            var comboboxItems = ChatModel.ChatStats.GetChatActiveYears()
+            var comboboxItems = _chatStatistics.GetChatActiveYears()
                 .Select(year => year.ToString());
 
             ChatActiveYears.AddRange(comboboxItems);
         }
 
 
-        private static string GetTotalMessageCountStats()
+        private string GetTotalMessageCountStats()
         {
-            return ChatModel.ChatStats.GetTotalMessageCount().ToString("n0");
+            return _chatStatistics.GetTotalMessageCount().ToString("n0");
         }
 
 
-        private static List<ActiveDay> GetTopActiveDatesStats(int count)
+        private List<ActiveDay> GetTopActiveDatesStats(int count)
         {
-            var topActiveDates = ChatModel.ChatStats.GetTopActiveDates(count);
+            var topActiveDates = _chatStatistics.GetTopActiveDates(count);
 
             var activeDays = new List<ActiveDay>();
 
@@ -121,15 +126,15 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private static Dictionary<int, int> GetYearlyMessageStats()
+        private Dictionary<int, int> GetYearlyMessageStats()
         {
-            return ChatModel.ChatStats.GetMessageCountPerYear();
+            return _chatStatistics.GetMessageCountPerYear();
         }
 
 
-        private static Dictionary<string, int> GetSendersMessageCount(int? year = null)
+        private Dictionary<string, int> GetSendersMessageCount(int? year = null)
         {
-            return ChatModel.ChatStats.GetMessageCountPerUser(year);
+            return _chatStatistics.GetMessageCountPerUser(year);
         }
 
 
@@ -191,7 +196,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private static List<Axis> SetXAxes()
+        private List<Axis> SetXAxes()
         {
             return new List<Axis>
             {
@@ -204,9 +209,9 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private static string[] GetXAxes()
+        private string[] GetXAxes()
         {
-            return ChatModel.ChatStats.GetChatActiveYears()
+            return _chatStatistics.GetChatActiveYears()
                 .Select(x => x.ToString())
                 .ToArray();
         }

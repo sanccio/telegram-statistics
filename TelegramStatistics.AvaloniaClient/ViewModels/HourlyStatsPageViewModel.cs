@@ -12,11 +12,14 @@ using System;
 using Avalonia.Controls;
 using LiveChartsCore.Drawing;
 using TelegramStatistics.Models;
+using TelegramStatistics.Interfaces;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
     public partial class HourlyStatsPageViewModel : ViewModelBase
     {
+        private readonly IChatStatistics _chatStatistics;
+
         private List<HourlyMessageCount> _hourlyStats;
 
         public int[] ChatActiveYears { get; set; }
@@ -59,12 +62,14 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        public HourlyStatsPageViewModel()
+        public HourlyStatsPageViewModel(IChatStatistics chatStatistics)
         {
+            _chatStatistics = chatStatistics;
+
             _hourlyStats = GetHourlyStats(SelectedYearCombobox);
             HourlyMessageCounts = MapHourlyMessageCounts();
 
-            ChatActiveYears = ChatModel.ChatStats.GetChatActiveYears();
+            ChatActiveYears = _chatStatistics.GetChatActiveYears();
             SelectedYearCombobox = ChatActiveYears.FirstOrDefault();
 
             XAxes = SetXAxes();
@@ -93,9 +98,9 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         }
 
 
-        private static List<HourlyMessageCount> GetHourlyStats(int? year, int? month = null)
+        private List<HourlyMessageCount> GetHourlyStats(int? year, int? month = null)
         {
-            return ChatModel.ChatStats.GetIndividualMessageCountPerHour(year, month);
+            return _chatStatistics.GetIndividualMessageCountPerHour(year, month);
         }
 
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using TelegramStatistics.AvaloniaClient.Models;
+using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
@@ -12,6 +12,8 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
     {
         const int MinWordFrequency = 10;
         const string UnknownUserName = "Unknown";
+
+        private readonly IChatStatistics _chatStatistics;
 
         private IEnumerable<UserWordCount> _userWordCounts = new List<UserWordCount>();
 
@@ -26,8 +28,10 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         public string SecondSenderName { get; set; } = string.Empty;
 
 
-        public WordFrequencyViewModel()
+        public WordFrequencyViewModel(IChatStatistics chatStatistics)
         {
+            _chatStatistics = chatStatistics;
+
             SetGeneralWordStats();
 
             _userWordCounts = GetWordFrequencyPerUser(MinWordFrequency);
@@ -38,7 +42,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
         private void SetGeneralWordStats(int? minWordFrequency = 1)
         {
-            IEnumerable<WordCount> wordsUsage = ChatModel.ChatStats.GetGeneralWordsUsage(minWordFrequency);
+            IEnumerable<WordCount> wordsUsage = _chatStatistics.GetGeneralWordsUsage(minWordFrequency);
             GeneralWordUsage = new ObservableCollection<WordCount>(wordsUsage);
         }
 
@@ -59,9 +63,9 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
             }
         }
 
-        private static IEnumerable<UserWordCount> GetWordFrequencyPerUser(int? minWordFrequency)
+        private IEnumerable<UserWordCount> GetWordFrequencyPerUser(int? minWordFrequency)
         {
-            return ChatModel.ChatStats.GetWordsUsagePerUser(minWordFrequency);
+            return _chatStatistics.GetWordsUsagePerUser(minWordFrequency);
         }
     }
 }

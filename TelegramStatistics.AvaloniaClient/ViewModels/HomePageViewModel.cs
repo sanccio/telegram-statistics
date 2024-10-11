@@ -7,7 +7,6 @@ using System.Threading;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using Avalonia;
-using TelegramStatistics.AvaloniaClient.Models;
 using Avalonia.Controls;
 using Avalonia.Media;
 using TelegramStatistics.Interfaces;
@@ -16,6 +15,15 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
     public partial class HomePageViewModel : ViewModelBase
     {
+        private readonly IDeserializer _deserializer;
+        private readonly IChatStatistics _chatStatistics;
+
+        public HomePageViewModel(IDeserializer deserializer, IChatStatistics chatStatistics)
+        {
+            _deserializer = deserializer;
+            _chatStatistics = chatStatistics;
+        }
+
         [ObservableProperty] private static string? _fileChoosingOperationStatus;
 
         [ObservableProperty] private static string? _fileStatusIconColor;
@@ -38,11 +46,8 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                 return;
             }
 
-            IDeserializer deserializer = new JsonDeserializer(); // Temp
-            var chat = await deserializer.DeserializeFile(file.Path.LocalPath.ToString());
-
-            ChatModel.ChatStats = ChatModel.InitializeChatStatistics(); // Temp
-            ChatModel.ChatStats.SetChat(chat);
+            var chat = await _deserializer.DeserializeFile(file.Path.LocalPath.ToString());
+            _chatStatistics.SetChat(chat);
 
             SetFileChoosingOperationResult(
                     iconKey: "checkmark_regular",

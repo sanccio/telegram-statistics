@@ -8,6 +8,8 @@ using System;
 using TelegramStatistics.AvaloniaClient.ViewModels;
 using TelegramStatistics.AvaloniaClient.Views;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using TelegramStatistics.Interfaces;
 
 namespace TelegramStatistics.AvaloniaClient
 {
@@ -29,11 +31,27 @@ namespace TelegramStatistics.AvaloniaClient
 
         public override void OnFrameworkInitializationCompleted()
         {
+            var collection = new ServiceCollection();
+
+            collection.AddSingleton<MainWindowViewModel>();
+            collection.AddSingleton<HomePageViewModel>();
+            collection.AddTransient<GeneralInfoViewModel>();
+            collection.AddTransient<MonthlyStatsPageViewModel>();
+            collection.AddTransient<HourlyStatsPageViewModel>();
+            collection.AddTransient<WordFrequencyViewModel>();
+            collection.AddSingleton<IDeserializer, JsonDeserializer>();
+            collection.AddSingleton<IChatStatistics, ChatStatistics>();
+            collection.AddSingleton<IChatService, ChatService>();
+            collection.AddSingleton<ITextAnalyzer, TextAnalyzer>();
+
+            var services = collection.BuildServiceProvider();
+            var mainWindowViewModel = services.GetRequiredService<MainWindowViewModel>();
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = mainWindowViewModel,
                 };
             }
 

@@ -3,20 +3,28 @@ using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System;
 using System.Text.RegularExpressions;
-using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia;
 using Avalonia.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public MainWindowViewModel(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            _currentPage = serviceProvider.GetRequiredService<HomePageViewModel>();
+        }
+
         [ObservableProperty]
         private bool _isPaneOpen = true;
 
         [ObservableProperty]
-        private ViewModelBase _currentPage = new HomePageViewModel();
+        private ViewModelBase _currentPage;
 
         [ObservableProperty]
         private ListItemTemplate? _selectedListItem;
@@ -24,7 +32,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         partial void OnSelectedListItemChanged(ListItemTemplate? value)
         {
             if (value is null) return;
-            var instance = Activator.CreateInstance(value.ModelType);
+            var instance = _serviceProvider.GetService(value.ModelType);
             if (instance is null) return;
             CurrentPage = (ViewModelBase)instance;
         }
