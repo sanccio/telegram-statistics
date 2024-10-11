@@ -6,14 +6,14 @@ namespace TelegramStatistics
 {
     public class JsonDeserializer : IDeserializer
     {
-        public async Task<Chat> DeserializeFile(string path)
+        public Chat DeserializeFile(string path)
         {
             using FileStream openStream = File.OpenRead(path);
 
-            var chat = await JsonSerializer.DeserializeAsync<Chat>(openStream)
+            var chat = JsonSerializer.Deserialize<Chat>(openStream)
                 ?? throw new InvalidOperationException($"Failed to deserialize file {path}");
 
-            return chat!;
+            return chat;
         }
     }
 }

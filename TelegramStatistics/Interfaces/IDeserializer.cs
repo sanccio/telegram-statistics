@@ -4,6 +4,6 @@ namespace TelegramStatistics.Interfaces
 {
     public interface IDeserializer
     {
-        public Task<Chat> DeserializeFile(string path);
+        public Chat DeserializeFile(string path);
     }
 }

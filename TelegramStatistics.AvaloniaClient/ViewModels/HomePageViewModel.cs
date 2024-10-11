@@ -46,7 +46,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                 return;
             }
 
-            var chat = await _deserializer.DeserializeFile(file.Path.LocalPath.ToString());
+            var chat = _deserializer.DeserializeFile(file.Path.LocalPath.ToString());
             _chatStatistics.SetChat(chat);
 
             SetFileChoosingOperationResult(
