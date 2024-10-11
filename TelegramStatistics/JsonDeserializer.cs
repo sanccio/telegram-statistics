@@ -10,7 +10,8 @@ namespace TelegramStatistics
         {
             using FileStream openStream = File.OpenRead(path);
 
-            var chat = await JsonSerializer.DeserializeAsync<Chat>(openStream);
+            var chat = await JsonSerializer.DeserializeAsync<Chat>(openStream)
+                ?? throw new InvalidOperationException($"Failed to deserialize file {path}");
 
             return chat!;
         }

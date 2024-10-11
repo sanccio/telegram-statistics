@@ -4,22 +4,24 @@ namespace TelegramStatistics.Interfaces
 {
     public interface IChatStatistics
     {
-        public int GetTotalMessageCount(Chat chat);
-
-        public IEnumerable<WordCount> GetWordsUsage(IEnumerable<Message> messages, int? minimumWordFrequency = 1);
-
-        public IEnumerable<UserWordCount> GetWordsUsagePerUser(Chat chat, int? minimumWordFrequency = 1);
-
-        public Dictionary<string, int> GetMessageCountPerUser(Chat chat, int? year = null);
-
-        public Dictionary<int, int> GetMessageCountPerYear(Chat chat);
-
-        public Dictionary<int, int> GetMessageCountPerMonth(Chat chat, int year);
-
-        public Dictionary<int, int> GetAggregateMessageCountPerHour(Chat chat, int? year = null, int? month = null, int? dayOfMonth = null);
+        void SetChat(Chat chat);
         
-        public List<HourlyMessageCount> GetIndividualMessageCountPerHour(Chat chat, int? year = null, int? month = null, int? dayOfMonth = null);
+        int GetTotalMessageCount();
 
-        public Dictionary<string, int> GetTopActiveDates(Chat chat, int count);
+        IEnumerable<WordCount> GetGeneralWordsUsage(int? minimumWordFrequency = 1);
+
+        IEnumerable<UserWordCount> GetWordsUsagePerUser(int? minimumWordFrequency = 1);
+
+        Dictionary<string, int> GetMessageCountPerUser(int? year = null);
+
+        Dictionary<int, int> GetMessageCountPerYear();
+
+        Dictionary<int, int> GetMessageCountPerMonth(int year);
+
+        List<HourlyMessageCount> GetIndividualMessageCountPerHour(int? year = null, int? month = null, int? dayOfMonth = null);
+
+        Dictionary<string, int> GetTopActiveDates(int count);
+
+        int[] GetChatActiveYears();
     }
 }

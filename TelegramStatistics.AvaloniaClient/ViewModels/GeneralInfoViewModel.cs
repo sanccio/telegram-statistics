@@ -72,7 +72,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         {
             ChatActiveYears.Add("All Time");
 
-            var comboboxItems = ChatModel.GetChatActiveYears()
+            var comboboxItems = ChatModel.ChatStats.GetChatActiveYears()
                 .Select(year => year.ToString());
 
             ChatActiveYears.AddRange(comboboxItems);
@@ -81,13 +81,13 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
         private static string GetTotalMessageCountStats()
         {
-            return ChatModel.ChatStats.GetTotalMessageCount(ChatModel.Chat).ToString("n0");
+            return ChatModel.ChatStats.GetTotalMessageCount().ToString("n0");
         }
 
 
         private static List<ActiveDay> GetTopActiveDatesStats(int count)
         {
-            var topActiveDates = ChatModel.ChatStats.GetTopActiveDates(ChatModel.Chat, count);
+            var topActiveDates = ChatModel.ChatStats.GetTopActiveDates(count);
 
             var activeDays = new List<ActiveDay>();
 
@@ -123,13 +123,13 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
         private static Dictionary<int, int> GetYearlyMessageStats()
         {
-            return ChatModel.ChatStats.GetMessageCountPerYear(ChatModel.Chat);
+            return ChatModel.ChatStats.GetMessageCountPerYear();
         }
 
 
         private static Dictionary<string, int> GetSendersMessageCount(int? year = null)
         {
-            return ChatModel.ChatStats.GetMessageCountPerUser(ChatModel.Chat, year);
+            return ChatModel.ChatStats.GetMessageCountPerUser(year);
         }
 
 
@@ -206,7 +206,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
         private static string[] GetXAxes()
         {
-            return ChatModel.GetChatActiveYears()
+            return ChatModel.ChatStats.GetChatActiveYears()
                 .Select(x => x.ToString())
                 .ToArray();
         }

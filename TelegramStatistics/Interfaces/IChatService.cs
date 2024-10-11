@@ -6,10 +6,10 @@ namespace TelegramStatistics.Interfaces
     {
         public IEnumerable<string> GetPlainTexts(IEnumerable<Message> messages);
 
-        public Dictionary<string, List<Message>?> GetUsersMessages(List<User> users);
+        public Dictionary<string, List<Message>> GetUsersMessages(List<User> users);
 
         public void GroupAllMessagesBySender(Chat chat);
 
-        public IEnumerable<string?> GetSendersNames(List<Message> messages);
+        public IEnumerable<string?> GetSendersNames(Chat chat);
     }
 }

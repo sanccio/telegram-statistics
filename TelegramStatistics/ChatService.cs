@@ -1,21 +1,10 @@
-﻿using System;
-using TelegramStatistics.Interfaces;
+﻿using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
 namespace TelegramStatistics
 {
     public class ChatService : IChatService
     {        
-        public ChatService(Chat chat)
-        {
-            GroupAllMessagesBySender(chat);
-        }
-
-        public ChatService()
-        {
-        }
-
-
         public IEnumerable<string> GetPlainTexts(IEnumerable<Message> messages)
         {
             List<string> plainTexts = new();
@@ -36,9 +25,9 @@ namespace TelegramStatistics
         }
 
 
-        public Dictionary<string, List<Message>?> GetUsersMessages(List<User> users)
+        public Dictionary<string, List<Message>> GetUsersMessages(List<User> users)
         {
-            Dictionary<string, List<Message>?> usersMessages = users
+            Dictionary<string, List<Message>> usersMessages = users
                  .ToDictionary(x => x.From, x => x.Messages);
 
             return usersMessages;
@@ -47,9 +36,9 @@ namespace TelegramStatistics
         
         public void GroupAllMessagesBySender(Chat chat)
         {
-            IEnumerable<string?> senderNames = GetSendersNames(chat.Messages!);
+            IEnumerable<string?> senderNames = GetSendersNames(chat);
 
-            var groups = chat.Messages!
+            var groups = chat.Messages
                 .GroupBy(x => x.From);
 
             foreach (var name in senderNames)
@@ -64,14 +53,25 @@ namespace TelegramStatistics
         }
 
 
-        public IEnumerable<string?> GetSendersNames(List<Message> messages)
+        public IEnumerable<string?> GetSendersNames(Chat chat)
         {
-            IEnumerable<string?> senderNames = new List<string>();
+            List<string?> senderNames = new();
 
-            senderNames = messages
-                            .Select(m => m.From)
-                            .Where(m => !String.IsNullOrEmpty(m))
-                            .Distinct();
+            if (chat.Type == "personal_chat" && chat.Name is not null)
+            {
+                senderNames.Add(chat.Name);
+
+                string? interlocutor = chat.Messages.Find(m => m.From != chat.Name)?.From;
+                senderNames.Add(interlocutor);
+            }
+            else 
+            {
+                senderNames = chat.Messages
+                .Select(m => m.From)
+                .Where(m => !String.IsNullOrEmpty(m))
+                .Distinct()
+                .ToList();
+            }
 
             return senderNames;
         }

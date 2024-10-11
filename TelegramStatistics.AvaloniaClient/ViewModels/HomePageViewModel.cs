@@ -10,6 +10,7 @@ using Avalonia;
 using TelegramStatistics.AvaloniaClient.Models;
 using Avalonia.Controls;
 using Avalonia.Media;
+using TelegramStatistics.Interfaces;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
@@ -37,8 +38,11 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                 return;
             }
 
-            var chat = ChatModel.DeserializeChat(file.Path.LocalPath.ToString());
-            _ = new ChatModel(chat);
+            IDeserializer deserializer = new JsonDeserializer(); // Temp
+            var chat = await deserializer.DeserializeFile(file.Path.LocalPath.ToString());
+
+            ChatModel.ChatStats = ChatModel.InitializeChatStatistics(); // Temp
+            ChatModel.ChatStats.SetChat(chat);
 
             SetFileChoosingOperationResult(
                     iconKey: "checkmark_regular",

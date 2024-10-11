@@ -4,6 +4,6 @@
     {
         public string From { get; set; } = "";
 
-        public List<Message>? Messages { get; set; }
+        public List<Message> Messages { get; set; } = new();
     }
 }
