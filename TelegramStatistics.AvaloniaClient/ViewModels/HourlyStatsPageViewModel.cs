@@ -93,7 +93,10 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
 
             SelectedMonthCombobox = DefaultSelectedMonthValue;
 
-            AvailableChatYears = _chatStatistics.GetChatActiveYears();
+            AvailableChatYears = _chatStatistics.GetChatActiveYears()
+                .OrderByDescending(y => y)
+                .ToArray();
+
             SelectedYearCombobox = AvailableChatYears.FirstOrDefault();
 
             XAxes = SetXAxes();

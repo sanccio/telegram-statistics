@@ -189,7 +189,6 @@ namespace TelegramStatistics
 
             int[] activeYears = Enumerable
                 .Range(chatStartYear, chatEndYear - chatStartYear + 1)
-                .OrderByDescending(y => y)
                 .ToArray();
 
             return activeYears;

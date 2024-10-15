@@ -78,7 +78,8 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
             ChatActiveYears.Add("All Time");
 
             var comboboxItems = _chatStatistics.GetChatActiveYears()
-                .Select(year => year.ToString());
+                .Select(year => year.ToString())
+                .OrderByDescending(y => y);
 
             ChatActiveYears.AddRange(comboboxItems);
         }
