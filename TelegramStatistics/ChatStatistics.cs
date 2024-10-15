@@ -194,5 +194,25 @@ namespace TelegramStatistics
 
             return activeYears;
         }
+
+
+        public int[] GetAvailableMonthsWithinYear(int year)
+        {
+            EnsureChatIsSet();
+
+            int? firstMonth = chat.Messages.Find(m => m.Date.Year == year)?.Date.Month;
+            int? lastMonth = chat.Messages.LastOrDefault(m => m.Date.Year == year)?.Date.Month;
+
+            if (firstMonth == null || lastMonth == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var monthRange = Enumerable
+                .Range(firstMonth.Value, lastMonth.Value - firstMonth.Value + 1)
+                .ToArray();
+
+            return monthRange;
+        }
     }
 }

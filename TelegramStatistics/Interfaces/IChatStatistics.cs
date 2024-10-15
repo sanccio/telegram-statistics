@@ -23,5 +23,7 @@ namespace TelegramStatistics.Interfaces
         Dictionary<string, int> GetTopActiveDates(int count);
 
         int[] GetChatActiveYears();
+
+        int[] GetAvailableMonthsWithinYear(int year);
     }
 }

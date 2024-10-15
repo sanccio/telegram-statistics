@@ -31,25 +31,14 @@
         <WrapPanel HorizontalAlignment="Right">
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <ComboBox
-                    ItemsSource="{Binding ChatActiveYears}"
+                    ItemsSource="{Binding AvailableChatYears}"
                     SelectedIndex="0"
                     SelectedItem="{Binding SelectedYearCombobox}" />
 
-                <ComboBox SelectedIndex="0" SelectedValue="{Binding SelectedMonthCombobox}">
-                    <ComboBoxItem>All months</ComboBoxItem>
-                    <ComboBoxItem>January</ComboBoxItem>
-                    <ComboBoxItem>February</ComboBoxItem>
-                    <ComboBoxItem>March</ComboBoxItem>
-                    <ComboBoxItem>April</ComboBoxItem>
-                    <ComboBoxItem>May</ComboBoxItem>
-                    <ComboBoxItem>June</ComboBoxItem>
-                    <ComboBoxItem>July</ComboBoxItem>
-                    <ComboBoxItem>August</ComboBoxItem>
-                    <ComboBoxItem>September</ComboBoxItem>
-                    <ComboBoxItem>October</ComboBoxItem>
-                    <ComboBoxItem>November</ComboBoxItem>
-                    <ComboBoxItem>December</ComboBoxItem>
-                </ComboBox>
+                <ComboBox
+                    ItemsSource="{Binding AvailableChatMonthsWithinYear}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding SelectedMonthCombobox}" />
             </StackPanel>
         </WrapPanel>
 
