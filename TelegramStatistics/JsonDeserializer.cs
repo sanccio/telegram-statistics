@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using Newtonsoft.Json;
 using TelegramStatistics.Interfaces;
 using TelegramStatistics.Models;
 
@@ -9,8 +9,10 @@ namespace TelegramStatistics
         public Chat DeserializeFile(string path)
         {
             using FileStream openStream = File.OpenRead(path);
+            using StreamReader file = new(openStream);
+            string json = file.ReadToEnd();
 
-            var chat = JsonSerializer.Deserialize<Chat>(openStream)
+            var chat = JsonConvert.DeserializeObject<Chat>(json)
                 ?? throw new InvalidOperationException($"Failed to deserialize file {path}");
 
             return chat;

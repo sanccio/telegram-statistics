@@ -2,8 +2,8 @@
 {
     public class User
     {
-        public string From { get; set; } = "";
+        public string From { get; init; } = default!;
 
-        public List<Message> Messages { get; set; } = new();
+        public IReadOnlyList<Message> Messages { get; init; } = default!;
     }
 }

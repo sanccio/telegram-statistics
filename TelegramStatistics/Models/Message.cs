@@ -1,31 +1,34 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace TelegramStatistics.Models
 {
     public class Message
     {
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
+        [JsonProperty("id")]
+        public int Id { get; init; }
 
-        [JsonPropertyName("type")]
-        public string? Type { get; set; }
+        [JsonProperty("type")]
+        public string? Type { get; init; }
 
-        [JsonPropertyName("date")]
-        public DateTime Date { get; set; }
+        [JsonProperty("date")]
+        public DateTime Date { get; init; }
 
-        [JsonPropertyName("from")]
-        public string? From { get; set; }
+        [JsonProperty("from")]
+        public string? From { get; init; }
 
-        [JsonPropertyName("from_id")]
-        public string? FromId { get; set; }
+        [JsonProperty("from_id")]
+        public string? FromId { get; init; }
+        
+        [JsonProperty("media_type")]
+        public string? MediaType { get; set; }
 
-        [JsonPropertyName("forwarded_from")]
-        public string? ForwardedFrom { get; set; }
+        [JsonProperty("forwarded_from")]
+        public string? ForwardedFrom { get; init; }
 
-        [JsonPropertyName("text")]
-        public object? Text { get; set; }
+        [JsonProperty("text")]
+        public object? Text { get; init; }
 
-        [JsonPropertyName("text_entities")]
-        public List<TextEntity>? TextEntities { get; set; } = new List<TextEntity>();
+        [JsonProperty("text_entities")]
+        public IReadOnlyList<TextEntity>? TextEntities { get; init; } = new List<TextEntity>();
     }
 }

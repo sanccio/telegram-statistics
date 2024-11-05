@@ -20,7 +20,6 @@ namespace TelegramStatistics
         public void SetChat(Chat chat)
         {
             this.chat = chat ?? throw new ArgumentNullException(nameof(chat), "Chat cannot be null.");
-            _chatService.GroupAllMessagesBySender(chat);
         }
 
         [MemberNotNull(nameof(chat))]
@@ -64,14 +63,14 @@ namespace TelegramStatistics
 
             List<UserWordCount> userWordsStats = new();
 
-            Dictionary<string, List<Message>> usersMessages = _chatService.GetUsersMessages(chat.Users);
+            var usersMessages = chat.Users.ToDictionary(u => u.From, u => u.Messages);
 
             foreach (var userMessages in usersMessages)
             {
                 UserWordCount wordCounts = new()
                 {
                     UserName = userMessages.Key,
-                    UserWordCounts = GetWordsUsageFromMessages(userMessages.Value!, minimumWordFrequency).ToList()
+                    UserWordCounts = GetWordsUsageFromMessages(userMessages.Value, minimumWordFrequency).ToList()
                 };
 
                 userWordsStats.Add(wordCounts);
@@ -199,7 +198,7 @@ namespace TelegramStatistics
         {
             EnsureChatIsSet();
 
-            int? firstMonth = chat.Messages.Find(m => m.Date.Year == year)?.Date.Month;
+            int? firstMonth = chat.Messages.FirstOrDefault(m => m.Date.Year == year)?.Date.Month;
             int? lastMonth = chat.Messages.LastOrDefault(m => m.Date.Year == year)?.Date.Month;
 
             if (firstMonth == null || lastMonth == null)

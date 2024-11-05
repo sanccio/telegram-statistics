@@ -1,13 +1,13 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace TelegramStatistics.Models
 {
     public class TextEntity
     {
-        [JsonPropertyName("type")]
-        public string? Type { get; set; }
+        [JsonProperty("type")]
+        public string? Type { get; init; }
 
-        [JsonPropertyName("text")]
-        public string? Text { get; set; }
+        [JsonProperty("text")]
+        public string? Text { get; init; }
     }
 }
