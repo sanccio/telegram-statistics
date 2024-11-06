@@ -1,58 +1,62 @@
-﻿using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore;
+﻿using System;
 using System.Collections.Generic;
-using TelegramStatistics.AvaloniaClient.Models;
+using System.Globalization;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Reactive.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using DynamicData;
+using LiveChartsCore;
+using LiveChartsCore.Drawing;
+using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
-using System.Globalization;
-using System;
-using Avalonia.Controls;
-using LiveChartsCore.Drawing;
-using TelegramStatistics.Models;
+using TelegramStatistics.AvaloniaClient.Models;
 using TelegramStatistics.Interfaces;
-using System.Diagnostics;
-using DynamicData;
-using HarfBuzzSharp;
+using TelegramStatistics.Models;
 
 namespace TelegramStatistics.AvaloniaClient.ViewModels
 {
     public partial class HourlyStatsPageViewModel : ViewModelBase
     {
-        private readonly IChatStatistics _chatStatistics;
+        private const string DefaultSelectedMonthValue = "All months";
 
-        private IReadOnlyList<HourlyMessageCount>? _hourlyStats;
+        private readonly IChatStatistics _chatStatistics;
+        private IReadOnlyList<HourlyMessageCount> _hourlyStats = new List<HourlyMessageCount>();
+
+        [ObservableProperty] private IReadOnlyList<string> _availableChatMonthsWithinYear = new List<string>();
+        [ObservableProperty] private IReadOnlyList<ISeries> _series = new List<ISeries>();
+        [ObservableProperty] private int _selectedYearCombobox;
+        [ObservableProperty] private string _selectedMonthCombobox;
 
         public int[] AvailableChatYears { get; set; }
-
-        [ObservableProperty]
-        private List<string>? _availableChatMonthsWithinYear;
-
-        public IReadOnlyList<MessageCountPerHour>? HourlyMessageCounts { get; set; }
-
+        public IReadOnlyList<MessageCountPerHour> HourlyMessageCounts { get; set; } = new List<MessageCountPerHour>();
         public IReadOnlyList<Axis> XAxes { get; set; }
-
         public IReadOnlyList<Axis> YAxes { get; set; }
 
-        [ObservableProperty] 
-        private IReadOnlyList<ISeries>? _series;
-        
 
-        [ObservableProperty] 
-        private int _selectedYearCombobox;
+        public HourlyStatsPageViewModel(IChatStatistics chatStatistics)
+        {
+            _chatStatistics = chatStatistics;
+
+            SelectedMonthCombobox = DefaultSelectedMonthValue;
+
+            AvailableChatYears = _chatStatistics.GetChatActiveYears()
+                .OrderByDescending(y => y)
+                .ToArray();
+
+            SelectedYearCombobox = AvailableChatYears.FirstOrDefault();
+
+            XAxes = SetXAxes();
+            YAxes = SetYAxes();
+        }
+
 
         partial void OnSelectedYearComboboxChanged(int value)
         {
             UpdateMonthsCombobox(value);
-            UpdateStats(value,SelectedMonthCombobox);
+            UpdateStats(value, SelectedMonthCombobox);
         }
 
-        private const string DefaultSelectedMonthValue = "All months";
-
-        [ObservableProperty] 
-        private string _selectedMonthCombobox;
 
         partial void OnSelectedMonthComboboxChanged(string value)
         {
@@ -81,26 +85,9 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                 .Select(y => new DateTimeFormatInfo().GetMonthName(y))
                 .ToList();
 
-            AvailableChatMonthsWithinYear = new() { DefaultSelectedMonthValue, months };
+            AvailableChatMonthsWithinYear = new List<string>() { DefaultSelectedMonthValue, months };
 
             SelectedMonthCombobox = SelectedMonthCombobox is null ? DefaultSelectedMonthValue : SelectedMonthCombobox;
-        }
-
-
-        public HourlyStatsPageViewModel(IChatStatistics chatStatistics)
-        {
-            _chatStatistics = chatStatistics;
-
-            SelectedMonthCombobox = DefaultSelectedMonthValue;
-
-            AvailableChatYears = _chatStatistics.GetChatActiveYears()
-                .OrderByDescending(y => y)
-                .ToArray();
-
-            SelectedYearCombobox = AvailableChatYears.FirstOrDefault();
-
-            XAxes = SetXAxes();
-            YAxes = SetYAxes();
         }
 
 
@@ -151,7 +138,7 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                     Values = participantMessageCounts,
                     MaxBarWidth = 12,
                     Padding = 3,
-                    Fill = new SolidColorPaint(PieChartColorPalette.Colors[^colorIndexFromEnd++])
+                    Fill = new SolidColorPaint(PieChartColorPalette.Colors[^colorIndexFromEnd++]),
                 };
 
                 series.Add(columnSeries);
@@ -165,11 +152,11 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
         {
             return new List<Axis>
             {
-                new() 
+                new()
                 {
                     Labels = HourlyMessageCounts.Select(x => x.Hour.ToString()).ToList(),
                     TextSize = CommonChartOptions.FontSize,
-                    Padding = new Padding(8,15,8,0),
+                    Padding = new Padding(8, 15, 8, 0),
                     LabelsRotation = -45,
                     TicksPaint = new SolidColorPaint(new SKColor(35, 35, 35)),
                     TicksAtCenter = true,
@@ -187,7 +174,8 @@ namespace TelegramStatistics.AvaloniaClient.ViewModels
                 {
                     MinLimit = 0,
                     TextSize = CommonChartOptions.FontSize,
-                    Padding = new Padding(0,0,15,0),
+                    Padding = new Padding(0, 0, 15, 0),
+                    MinStep = 1,
                 }
             };
         }
